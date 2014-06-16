@@ -9,6 +9,8 @@ class Repo(models.Model):
 	fork=models.IntegerField(blank=True)
 	author=models.CharField(max_length=200)
 	author_link=models.URLField()
+	language=models.CharField(max_length=200)
+	subject=models.CharField(max_length=200)
 	last_update=models.DateTimeField(auto_now=True)
 
 class RepoCreation(models.Model):

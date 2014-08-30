@@ -12,20 +12,29 @@ class Repo(models.Model):
 	language=models.CharField(max_length=200)
 	subject=models.CharField(max_length=200)
 	last_update=models.DateTimeField(auto_now=True)
+	editor = models.ForeignKey(User)
 
-class RepoCreation(models.Model):
-	user=models.ForeignKey(User)
-	repo=models.ForeignKey(Repo)
+# class RepoCreation(models.Model):
+# 	user=models.ForeignKey(User)
+# 	repo=models.ForeignKey(Repo)
 
 class Tag(models.Model):
 	name=models.CharField(max_length=200)
 	repos=models.ManyToManyField(Repo)
+
+class TagStatistic(models.Model):
+	tag = models.ForeignKey(Tag)
+	repo_count = models.IntegerField(default=0)
 
 class Collection(models.Model):
 	name=models.CharField(max_length=200)
 	user=models.ForeignKey(User)
 	repos=models.ManyToManyField(Repo)
 	last_update=models.DateTimeField(auto_now=True)
+
+# class Account(models.Model):
+# 	user = models.OneToOneField(User)
+# 	repos = models.
 
 
 

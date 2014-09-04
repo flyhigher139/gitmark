@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 class Language(models.Model):
 	name = models.CharField(max_length=256)
+	def __unicode__(self):
+		return self.name
 
 class Repo(models.Model):
 	name=models.CharField(max_length=256)
@@ -17,6 +19,9 @@ class Repo(models.Model):
 	subject=models.CharField(max_length=256)
 	last_update=models.DateTimeField(auto_now=True)
 	editor = models.ForeignKey(User)
+
+	def __unicode__(self):
+		return self.name
 
 # class RepoCreation(models.Model):
 # 	user=models.ForeignKey(User)
@@ -39,8 +44,3 @@ class Collection(models.Model):
 # class Account(models.Model):
 # 	user = models.OneToOneField(User)
 # 	repos = models.
-
-
-
-		
-		

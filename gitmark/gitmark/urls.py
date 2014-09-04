@@ -10,5 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^main/', include('main.urls')),
-    url(r'^api/v1/', include('api.urls'))
+    url(r'^api/v1/', include('api.urls')),
+    # url(r'^oauth2/', include('provider.oauth2.urls', namespace = 'oauth2')),
 )

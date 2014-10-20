@@ -27,6 +27,17 @@ footer {
 	margin: 50px 0;
 }
 
+.tab-bar{
+	margin:0 0 15px;
+	border-bottom: 1px solid #ddd;
+	height: 2em;
+}
+
+.tab-bar-right{
+	position: relative;
+	float: right;
+}
+
 .repo-list{
 	padding: inherit;
 }
@@ -35,4 +46,12 @@ footer {
 	position: relative;
 	list-style:none;
 	border-bottom: 1px solid #eee;
+}
+
+.repo-list-meta {
+	display: block;
+	margin-top: 8px;
+	margin-bottom: 0;
+	font-size: 13px;
+	color: #888;
 }

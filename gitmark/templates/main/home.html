@@ -2,8 +2,18 @@
 {% block main %}
     <div class="container">
       <div class="content-left col-md-8">
-        <h1>My Repositories</h1>
-        <hr>
+        <div class="tab-bar">
+          <div class="tab-bar-left">
+
+          </div>
+          <div class="tab-bar-right">
+            <span class="label label-default">A</span>
+            <span class="label label-default">B</span>
+          </div>
+
+        </div>
+        <!-- <h1>My Repositories</h1> -->
+        <!-- <hr> -->
         <!-- <div class="panel panel-default">
           <div class="panel-heading">Panel heading without title</div>
           <div class="panel-body">
@@ -28,12 +38,12 @@
 
         <ul class="repo-list">
           <li class="repo-list-item">
-            <h4><a href="#">repo title</a></h4>
+            <h4><a href="#">dahlia / awesome-sqlalchemy</a></h4>
             <p class="repo-list-desc">
-              desctiption
+              A curated list of awesome tools for SQLAlchemy
             </p>
             <p class="repo-list-meta">
-              python add
+              python remove
             </p>
           </li>
           <li class="repo-list-item">
@@ -59,20 +69,26 @@
 
       </div>
       <div class="content-right col-md-4">
-        <h3>Filter</h3>
+        <!-- <h3>Filter</h3>
         <ul>
           <li>all repos</li>
           <li>my repos</li>
           <li>starred repos</li>
+        </ul> -->
+        <h3>Filter</h3>
+        <ul class="nav nav-pills nav-stacked">
+          <li class="active"><a href="#">all</a></li>
+          <li><a href="#">python</a></li>
+          <li><a href="#">javascript</a></li>
+          <li><a href="#">swift</a></li>
+          <li><a href="#">unknown</a></li>
+          <li><a href="#">more</a></li>
         </ul>
-        <h3>Languages</h3>
-        <ul>
-          <li>python</li>
-          <li>javascript</li>
-          <li>swift</li>
-        </ul>
+
         <h3>Tags</h3>
-        tag1 tag2 tag3
+        <span class="label label-primary active">tag1</span>
+        <span class="label label-default">tag2</span>
+        <span class="label label-default">tag3</span>
       </div>
 {% endblock %}
 

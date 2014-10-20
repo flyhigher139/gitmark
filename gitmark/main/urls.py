@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'gitmark.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^$', views.EnterpriseView.as_view(), name='home')
+    url(r'^$', views.EnterpriseView.as_view(), name='enterprise'),
+    url(r'^home$', views.HomeView.as_view(), name='home'),
 )

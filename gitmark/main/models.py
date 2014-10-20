@@ -23,11 +23,11 @@ class Repo(models.Model):
 
 	def __unicode__(self):
 		return self.name
-
-# class RepoCreation(models.Model):
-# 	user=models.ForeignKey(User)
-# 	repo=models.ForeignKey(Repo)
-
+#
+# # class RepoCreation(models.Model):
+# # 	user=models.ForeignKey(User)
+# # 	repo=models.ForeignKey(Repo)
+#
 class Tag(models.Model):
 	name = models.CharField(max_length=256)
 	repos = models.ManyToManyField(Repo, blank=True, null=True)
@@ -49,7 +49,7 @@ class UserAction(models.Model):
 	action = models.CharField(max_length=256)
 
 class Account(models.Model):
-	user = models.ForeignKey(User)
-	avatar = models.UrlField(null=True, blank=True)
-	repos_starred = models.ForeignKey(Repo)
+	user = models.ForeignKey(User, related_name="Account_User")
+	avatar = models.URLField(null=True, blank=True)
+	repos_starred = models.ForeignKey(Repo, related_name="Account_Repo")
 	following = models.ManyToManyField(User, blank=True, null=True)

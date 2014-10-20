@@ -19,6 +19,7 @@ class Repo(models.Model):
 	subject = models.CharField(max_length=256)
 	last_update = models.DateTimeField(auto_now=True)
 	creator = models.ForeignKey(User)
+	blocked = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return self.name

@@ -9,16 +9,16 @@ class Language(models.Model):
 		return self.name
 
 class Repo(models.Model):
-	name=models.CharField(max_length=256)
-	link=models.URLField()
-	starred=models.IntegerField(blank=True, null=True)
-	fork=models.IntegerField(blank=True)
-	author=models.CharField(max_length=256)
-	author_link=models.URLField(blank=True, null=True)
-	language=models.ForeignKey(Language)
-	subject=models.CharField(max_length=256)
-	last_update=models.DateTimeField(auto_now=True)
-	editor = models.ForeignKey(User)
+	name = models.CharField(max_length=256)
+	link = models.URLField()
+	starred = models.IntegerField(blank=True, null=True)
+	fork = models.IntegerField(blank=True)
+	author = models.CharField(max_length=256)
+	author_link = models.URLField(blank=True, null=True)
+	language = models.ForeignKey(Language)
+	subject = models.CharField(max_length=256)
+	last_update = models.DateTimeField(auto_now=True)
+	creator = models.ForeignKey(User)
 
 	def __unicode__(self):
 		return self.name
@@ -28,19 +28,27 @@ class Repo(models.Model):
 # 	repo=models.ForeignKey(Repo)
 
 class Tag(models.Model):
-	name=models.CharField(max_length=256)
-	repos=models.ManyToManyField(Repo, blank=True, null=True)
+	name = models.CharField(max_length=256)
+	repos = models.ManyToManyField(Repo, blank=True, null=True)
+	counts = models.IntegerField(default=0)
 
 class TagStatistic(models.Model):
 	tag = models.ForeignKey(Tag)
 	repo_count = models.IntegerField(default=0)
 
 class Collection(models.Model):
-	name=models.CharField(max_length=256)
-	user=models.ForeignKey(User)
-	repos=models.ManyToManyField(Repo)
-	last_update=models.DateTimeField(auto_now=True)
+	name = models.CharField(max_length=256)
+	user = models.ForeignKey(User)
+	repos = models.ManyToManyField(Repo)
+	last_update = models.DateTimeField(auto_now=True)
 
-# class Account(models.Model):
-# 	user = models.OneToOneField(User)
-# 	repos = models.
+class UserAction(models.Model):
+	user = models.ForeignKey(User)
+	repo = models.ForeignKey(Repo)
+	action = models.CharField(max_length=256)
+
+class Account(models.Model):
+	user = models.ForeignKey(User)
+	avatar = models.UrlField(null=True, blank=True)
+	repos_starred = models.ForeignKey(Repo)
+	following = models.ManyToManyField(User, blank=True, null=True)

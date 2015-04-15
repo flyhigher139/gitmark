@@ -2,3 +2,4 @@
 .DS_Store
 db.sqlite3
 gitmark/static/prototype/*.png
+venv

@@ -1,0 +1,19 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="InputGitHubUsername">GitHub username </label>
+                <input type="text" class="form-control" id="InputGitHubUsername" placeholder="GitHub username" name="github_username">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}

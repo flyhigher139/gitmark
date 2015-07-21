@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^enterprise$', views.EnterpriseView.as_view(), name='enterprise'),
     url(r'^home$', views.HomeView.as_view(), name='home'),
     url(r'^$', views.AdminIndexView.as_view(), name='admin_index'),
+    url(r'^repos/import', views.ImportRepoView.as_view(), name='admin_import_repo'),
 )

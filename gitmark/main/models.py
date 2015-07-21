@@ -10,6 +10,7 @@ class Language(models.Model):
 
 class Repo(models.Model):
     name = models.CharField(max_length=256)
+    full_name = models.CharField(max_length=256, unique=True)
     link = models.URLField()
     # starred = models.IntegerField(blank=True, null=True)
     # fork = models.IntegerField(blank=True)
@@ -22,6 +23,13 @@ class Repo(models.Model):
     # creator = models.ForeignKey(User)
     # blocked = models.BooleanField(default=False)
     create_date = models.DateTimeField(auto_now_add=True)
+
+    # def save(self, *args, **kwargs):
+    #     try:
+    #         repo = Repo.objects.get(full_name=self.full_name)
+    #         return repo
+    #     except Repo.DoesNotExist:
+    #         return super(Repo, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -60,3 +68,6 @@ class UserAction(models.Model):
 class RepoStarred(models.Model):
     repo = models.ForeignKey(Repo)
     user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return self.user.username + ' -> ' + self.repo.full_name

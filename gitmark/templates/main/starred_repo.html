@@ -1,0 +1,41 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+{% load bootstrap3 %}
+
+<div class="row">
+    <div class="col-md-7 col-md-offset-1">
+    {% for starred_repo in starred_repos %}
+    <div>
+        <h3><a href="{{ starred_repo.repo.link }}">{{ starred_repo.repo.full_name}}</a></h3>
+        <p>{{ starred_repo.repo.desc}}</p>
+        <p><a href="#">star</a> | <a href="#">add to collection</a></p>
+        <hr>
+    </div>
+    {% endfor %}
+
+    {% bootstrap_pagination starred_repos %}
+
+    </div>
+    <div class="col-md-3">
+        <h3>Filter by Language</h3>
+        <hr>
+        <div class="list-group">
+            {% for language in languages %}
+                {% if category_id == language.id %}
+                    <a href="#" class="list-group-item no-border-group-list active">{{ language.name }} 
+                    <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+                    <span class="badge">&nbsp;{{language.num_repo}}&nbsp;</span></a>
+                {% else %}
+                    <a href="#" class="list-group-item no-border-group-list ">{{ language.name }} 
+                    <span class="badge">&nbsp; {{language.num_repo}} &nbsp;</span></a>
+                {% endif %}
+                
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}

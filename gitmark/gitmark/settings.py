@@ -141,9 +141,9 @@ REST_FRAMEWORK = {
 # GitMark settings
 #################################
 
-GitMark = {
+GITMARK = {
     'PER_PAGE': 5,
-    'PER_PAGE_ADMIN': 10,
+    'PER_PAGE_ADMIN': 20,
     # 'COMMENT_TYPE': 'duoshuo',
     # 'COMMENT_OPT':{
     #     'duoshuo':'mayblog',

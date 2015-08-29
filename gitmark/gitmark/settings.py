@@ -143,7 +143,7 @@ REST_FRAMEWORK = {
 
 GITMARK = {
     'PER_PAGE': 5,
-    'PER_PAGE_ADMIN': 20,
+    'PER_PAGE_ADMIN': 10,
     # 'COMMENT_TYPE': 'duoshuo',
     # 'COMMENT_OPT':{
     #     'duoshuo':'mayblog',

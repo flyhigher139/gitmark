@@ -1,0 +1,76 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+{% load bootstrap3 %}
+
+<div class="row">
+    <div class="col-md-7 col-md-offset-1">
+    {% for starred_repo in starred_repos %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3><a href="{{ starred_repo.link }}">{{ starred_repo.full_name}}</a></h3>
+        </div>
+        <div class="col-md-9">
+            <p>{{ starred_repo.desc}}</p>
+            <!-- <p class="grey-text"><small>Language: {{starred_repo.language.name}}</small> </p> -->
+            <p><span class="label label-default"><small>{{starred_repo.language.name}}</small></span></p>
+        </div>
+        <div class="col-md-3">
+                <div>
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="tooltip" data-placement="top" title="star" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-star"></i> unstar
+                    <!-- <span class="caret"></span> -->
+                  </button>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-tasks"></i> collections
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                  </ul>
+                </div>
+        </div>
+
+    </div>
+
+        <hr>
+    {% endfor %}
+
+    {% bootstrap_pagination starred_repos url=url_parm %}
+
+    </div>
+    <div class="col-md-3">
+        <h4>Filter by Language <i class="fa fa-filter"></i> </h4>
+        <hr>
+        <div class="list-group">
+            {% for language in languages %}
+                {% if language_id == language.language %}
+                    <a href="{% url 'main:admin_starred_repo' %}?language={{language.language}}" class="list-group-item no-border-group-list active">{{ language.name }} 
+                    <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+                    <span class="badge">&nbsp;{{language.num_repo}}&nbsp;</span></a>
+                {% else %}
+                    <a href="{% url 'main:admin_starred_repo' %}?language={{language.language}}" class="list-group-item no-border-group-list ">{{ language.name }} 
+                    <span class="badge">&nbsp; {{language.num_repo}} &nbsp;</span></a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+    $('.rm-filter').on('click', function (event) {
+        location.href = "{% url 'main:admin_starred_repo' %}";
+        return false;
+      });
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+{% endblock %}

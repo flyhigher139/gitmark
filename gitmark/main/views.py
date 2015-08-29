@@ -13,6 +13,10 @@ from . import models
 PER_PAGE = settings.GITMARK['PER_PAGE']
 PER_PAGE_ADMIN = settings.GITMARK['PER_PAGE_ADMIN']
 
+def common_data():
+    data = {}
+    return data
+
 
 class EnterpriseView(View):
 	template_name = r'main/enterprise.html'
@@ -21,19 +25,19 @@ class EnterpriseView(View):
 
 
 class AdminIndexView(View):
-    template = 'main/admin_index.html'
+    template_name = 'myadmin/index.html'
     def get(self, request):
-        data = {}
-        return render(request, self.template, data)
+        data = common_data()
+        return render(request, self.template_name, data)
 
 class HomeView(View):
-    template = 'main/home.html'
+    template_name = 'main/home.html'
     def get(self, request):
-        data = {}
-        return render(request, self.template, data)
+        data = common_data()
+        return render(request, self.template_name, data)
 
 class ImportRepoView(View):
-    template_name = 'main/admin_import_repo.html'
+    template_name = 'myadmin/import_repo.html'
     def get(self, request):
         return render(request, self.template_name)
 
@@ -55,7 +59,8 @@ class ImportRepoView(View):
                         'desc' : starred_repo.get('description'),
                         'language' :language
                     })
-                repo_starred, created = models.RepoStarred.objects.get_or_create(repo=repo, user=request.user)
+                # repo_starred, created = models.RepoStarred.objects.get_or_create(repo=repo, user=request.user)
+                repo.starred_users.add(request.user)
 
         # api = 'https://api.github.com/users/{0}/starred?page=1'.format(github_user)
         page = 1
@@ -76,14 +81,25 @@ class ImportRepoView(View):
         return HttpResponse('Succeed to import repos')
 
 class StarredRepoView(View):
-    template_name = 'main/starred_repo.html'
+    template_name = 'myadmin/starred_repo.html'
     def get(self, request):
-        data = {}
-        starred_repos = models.RepoStarred.objects.filter(user=request.user)
-
-        languages = models.Language.objects.annotate(num_repo=Count('repo'))
-        # languages = starred_repos.values('language').annotate(num_repo=Count('language'))
+        data = common_data()
+        language_id = request.GET.get('language', 0)
+        try:
+            language_id = int(language_id)
+        except ValueError:
+            raise Http404
+        data['language_id'] = language_id
+        starred_repos = models.Repo.objects.filter(starred_users=request.user)
+        languages = starred_repos.values('language').annotate(num_repo=Count('language'))
+        for language in languages:
+            language['name'] = models.Language.objects.get(pk=language['language']).name
         data['languages'] = languages
+
+        if language_id:        
+            starred_repos = starred_repos.filter(language__id=language_id)
+            url_parm = '?language={0}'.format(language_id)
+            data['url_parm'] = url_parm
 
         paginator = Paginator(starred_repos, PER_PAGE_ADMIN)
         page = request.GET.get('page')
@@ -97,6 +113,32 @@ class StarredRepoView(View):
         data['starred_repos'] = starred_repos
 
 
+
+        return render(request, self.template_name, data)
+
+class MyCollectionView(View):
+    template_name = 'myadmin/collections.html'
+    def get(self, request):
+        data = common_data()
+        collections = models.Collection.objects.filter(user=request.user)
+        data['collections'] = collections
+
+        return render(request, self.template_name, data)
+
+class MyCollectionDetailView(View):
+    template_name = 'myadmin/collection.html'
+    def get(self, request, pk):
+        pk = int(pk)
+        data = common_data()
+        collections = models.Collection.objects.filter(user=request.user)
+        data['collections'] = collections
+        try:
+            cur_collection = models.Collection.objects.get(pk=pk)
+            data['cur_collection'] = cur_collection
+        except models.Collection.ObjectNotExist:
+            raise Http404
+        repos = cur_collection.repos.all()
+        data['repos'] = repos
 
         return render(request, self.template_name, data)
 

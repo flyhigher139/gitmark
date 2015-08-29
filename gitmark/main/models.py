@@ -23,6 +23,7 @@ class Repo(models.Model):
     # creator = models.ForeignKey(User)
     # blocked = models.BooleanField(default=False)
     create_date = models.DateTimeField(auto_now_add=True)
+    starred_users = models.ManyToManyField(User)
 
     # def save(self, *args, **kwargs):
     #     try:
@@ -49,10 +50,14 @@ class Tag(models.Model):
 
 class Collection(models.Model):
     name = models.CharField(max_length=256)
+    description = models.TextField(blank=True)
     user = models.ForeignKey(User)
-    repos = models.ManyToManyField(Repo)
+    repos = models.ManyToManyField(Repo, blank=True)
     last_update = models.DateTimeField(auto_now=True)
     create_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username + '->' + self.name
 
 class UserAction(models.Model):
     user = models.ForeignKey(User)

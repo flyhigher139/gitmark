@@ -1,0 +1,39 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+{% load bootstrap3 %}
+
+<div class="row">
+    <div class="col-md-2">
+        <ul class="list-group">
+        {% for collection in collections %}
+          {% if cur_collection.id == collection.id %}
+                <a href="{% url 'main:my_collection' collection.id %}" class="list-group-item no-border-group-list active">{{ collection.name }} 
+                <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+                </a>
+            {% else %}
+                <a href="{% url 'main:my_collection' collection.id %}" class="list-group-item no-border-group-list ">{{ collection.name }}</a>
+            {% endif %}
+        {% endfor %}
+        </ul>
+
+    </div>
+    <div class="col-md-10">
+        <div class="row">
+            {% for repo in repos %}
+            <div class="col-md-9">
+                <h3><a href="{{ repo.link }}">{{ repo.full_name}}</a></h3>
+                <p>{{ repo.desc}}</p>
+                <!-- <p class="grey-text"><small>Language: {{repo.language.name}}</small> </p> -->
+                <p><span class="label label-default"><small>{{repo.language.name}}</small></span></p>
+                <hr>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}

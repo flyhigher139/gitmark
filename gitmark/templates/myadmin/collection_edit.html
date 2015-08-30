@@ -1,0 +1,64 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+{% load bootstrap3 %}
+<ul class="nav nav-tabs">
+  <li role="presentation" {% if starred %} class="active" {% endif %}><a href="{% url 'main:my_collection_edit_starred' collection.id %}">Starred Repos</a></li>
+  <li role="presentation" {% if all %} class="active" {% endif %}><a href="{% url 'main:my_collection_edit_all' collection.id %}">All Repos</a></li>
+  <li role="presentation"><a href="#">Search</a></li>
+</ul>
+<div class="row">
+  <br>
+  <div class="col-md-8">
+    <form method="POST">
+      {% for repo in repos %}
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label>
+              <input type="checkbox"> {{ repo.full_name }}
+            </label>
+              
+            
+            <p><small>{{ repo.desc }}</small></p>
+            <p><span class="label label-default"><small>{{repo.language.name}}</small></span></p>
+            <hr>
+          </div>
+        </div><!-- /.col-lg-6 -->
+      {% endfor %}
+
+      <div class="col-md-12">
+        <button class="btn btn-default">Submit</button>
+      </div>
+
+      <div class="col-md-12">
+        {% bootstrap_pagination repos url=url_parm %}
+      </div>
+  
+    </form>
+  </div>
+  <div class="col-md-4">
+    <h4>Languagues</h4><hr>
+    <div class="list-group">
+        {% for language in languages %}
+            {% if language_id == language.id %}
+                <a href="?language={{language.id}}" class="list-group-item no-border-group-list active">{{ language.name }} 
+                <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small></a>
+            {% else %}
+                <a href="?language={{language.id}}" class="list-group-item no-border-group-list ">{{ language.name }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+  $('.rm-filter').on('click', function (event) {
+      location.href = ".";
+      return false;
+    });
+</script>
+{% endblock %}

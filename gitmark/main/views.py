@@ -1,14 +1,15 @@
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
-# from django.db import IntegrityError
+from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.conf import settings
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import requests
 
-from . import models
+from . import models, forms
 
 PER_PAGE = settings.GITMARK['PER_PAGE']
 PER_PAGE_ADMIN = settings.GITMARK['PER_PAGE_ADMIN']
@@ -118,12 +119,35 @@ class StarredRepoView(View):
 
 class MyCollectionView(View):
     template_name = 'myadmin/collections.html'
-    def get(self, request):
+    def get(self, request, form=None):
         data = common_data()
+
+        if not form:
+            form = forms.CollectionForm()
+        data['form'] = form
+        
         collections = models.Collection.objects.filter(user=request.user)
         data['collections'] = collections
 
         return render(request, self.template_name, data)
+
+    def post(self, request):
+        form = forms.CollectionForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            desc = form.cleaned_data['description']
+            collection = models.Collection(name=name, description=desc, user=request.user)
+            collection.save()
+
+            msg = 'Succeed to create new collection'
+            messages.add_message(request, messages.SUCCESS, msg)
+            url = '.'
+            return redirect(url)
+        else:
+            msg = 'Form data error'
+            messages.add_message(request, messages.ERROR, msg)
+            return self.get(request, form)
+
 
 class MyCollectionDetailView(View):
     template_name = 'myadmin/collection.html'
@@ -137,7 +161,7 @@ class MyCollectionDetailView(View):
             data['cur_collection'] = cur_collection
         except models.Collection.ObjectNotExist:
             raise Http404
-            
+
         repos = cur_collection.repos.all()
 
         paginator = Paginator(repos, PER_PAGE)
@@ -153,6 +177,59 @@ class MyCollectionDetailView(View):
 
         data['repos'] = repos
 
+        return render(request, self.template_name, data)
+
+class MyCollectionEditView(View):
+    template_name = 'myadmin/collection_edit.html'
+    def get(self, request, pk, from_starred=None):
+        data = common_data()
+        data['all'] = True
+
+        pk = int(pk)
+
+        try:
+            collection = models.Collection.objects.get(pk=pk)
+            data['collection'] = collection
+
+        except models.Collection.DoesNotExist:
+            raise Http404
+
+        collection_repo_ids = collection.repos.all().values_list('id', flat=True)
+        # return HttpResponse(collection_repo_ids)
+
+        languages = models.Language.objects.all()
+        data['languages'] = languages
+
+        language_id = request.GET.get('language')
+
+        repos = models.Repo.objects.exclude(id__in=collection_repo_ids)
+
+        if language_id:
+            try:
+                language_id = int(language_id)
+            except:
+                raise Http404
+
+            data['language_id'] = language_id
+            url_parm = '?language={0}'.format(language_id)
+            data['url_parm'] = url_parm
+            repos = repos.filter(language__id=language_id)
+
+        if from_starred:
+            repos = repos.filter(starred_users=request.user)
+            data['all'] = False
+            data['starred'] = True
+
+        paginator = Paginator(repos, PER_PAGE_ADMIN)
+        page = request.GET.get('page')
+        try:
+            repos = paginator.page(page)
+        except PageNotAnInteger:
+            repos = paginator.page(1)
+        except EmptyPage:
+            repos = paginator.page(paginator.num_pages)
+
+        data['repos'] = repos
         return render(request, self.template_name, data)
 
 

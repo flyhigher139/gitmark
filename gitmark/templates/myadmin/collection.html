@@ -6,7 +6,7 @@
     <div class="col-md-8 col-md-offset-1">
         <div class="row">
             <div class="btn-group" role="group" aria-label="...">
-              <button type="button" class="btn btn-default"><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></button>
+              <button type="button" class="btn btn-default"><a href="{% url 'main:my_collection_edit_starred' cur_collection.id %}"><i class="fa fa-pencil-square-o"></i> Edit</a></button>
               <button type="button" class="btn btn-default"><a href="#"><i class="fa fa-trash"></i> Delete</a></button>
             </div>
         </div>

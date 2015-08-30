@@ -3,7 +3,38 @@
 {% load bootstrap3 %}
 
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-8 col-md-offset-1">
+        <div class="row">
+            <div class="btn-group" role="group" aria-label="...">
+              <button type="button" class="btn btn-default"><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></button>
+              <button type="button" class="btn btn-default"><a href="#"><i class="fa fa-trash"></i> Delete</a></button>
+            </div>
+        </div>
+        <div class="row">
+            {% for repo in repos %}
+            <div class="col-md-9">
+                <h3><a href="{{ repo.link }}" target="_blank" >{{ repo.full_name}}</a></h3>
+                <p>{{ repo.desc}}</p>
+                <p>
+                    <span class="label label-default"><small>{{repo.language.name}}</small></span> &nbsp;
+                    <i class="fa fa-star"></i> &nbsp;
+                    <i class="fa fa-trash"></i>
+                </p>
+                <hr>
+            </div>
+
+            {% empty %}
+            <div class="col-md-9">
+                <br><br>
+                <p>No collection yet</p>
+            </div>
+            
+            {% endfor %}
+        </div>
+        {% bootstrap_pagination repos %}
+    </div>
+    <div class="col-md-3">
+        <h3>Collections</h3><hr>
         <ul class="list-group">
         {% for collection in collections %}
           {% if cur_collection.id == collection.id %}
@@ -17,23 +48,17 @@
         </ul>
 
     </div>
-    <div class="col-md-10">
-        <div class="row">
-            {% for repo in repos %}
-            <div class="col-md-9">
-                <h3><a href="{{ repo.link }}">{{ repo.full_name}}</a></h3>
-                <p>{{ repo.desc}}</p>
-                <!-- <p class="grey-text"><small>Language: {{repo.language.name}}</small> </p> -->
-                <p><span class="label label-default"><small>{{repo.language.name}}</small></span></p>
-                <hr>
-            </div>
-            
-            {% endfor %}
-        </div>
-    </div>
 </div>
 {% endblock %}
 
 
+
 {% block js %}
+<script type="text/javascript">
+    $('.rm-filter').on('click', function (event) {
+        location.href = "{% url 'main:my_collections' %}";
+        return false;
+      });
+
+</script>
 {% endblock %}

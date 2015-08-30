@@ -137,7 +137,20 @@ class MyCollectionDetailView(View):
             data['cur_collection'] = cur_collection
         except models.Collection.ObjectNotExist:
             raise Http404
+            
         repos = cur_collection.repos.all()
+
+        paginator = Paginator(repos, PER_PAGE)
+        page = request.GET.get('page')
+        try:
+            repos = paginator.page(page)
+        except PageNotAnInteger:
+            repos = paginator.page(1)
+        except EmptyPage:
+            repos = paginator.page(paginator.num_pages)
+
+        # data['starred_repos'] = starred_repos
+
         data['repos'] = repos
 
         return render(request, self.template_name, data)

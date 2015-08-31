@@ -23,6 +23,7 @@ urlpatterns += [
     url(r'^collections/(?P<pk>[0-9]+)/$', views.MyCollectionDetailView.as_view(), name='my_collection'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/$', views.MyCollectionEditView.as_view(), {'from_starred':True}, name='my_collection_edit_starred'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/all/$', views.MyCollectionEditView.as_view(), {'from_starred':False}, name='my_collection_edit_all'),
+    url(r'^collections/(?P<pk>[0-9]+)/edit/search/$', views.SearchRepos4Collection.as_view(), name='my_collection_edit_search'),
 ]
 
 

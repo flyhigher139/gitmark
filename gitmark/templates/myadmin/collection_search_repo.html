@@ -1,0 +1,101 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+{% load bootstrap3 %}
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="{% url 'main:my_collection_edit_starred' collection.id %}">Starred Repos</a></li>
+  <li role="presentation"><a href="{% url 'main:my_collection_edit_all' collection.id %}">All Repos</a></li>
+  <li role="presentation" class="active"><a href="{% url 'main:my_collection_edit_search' collection.id %}">Search</a></li>
+  <li role="presentation"><a href="{% url 'main:my_collection' collection.id %}"><i class="fa fa-history"></i></a></li>
+</ul>
+<div class="row">
+  <br>
+  <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-12">
+      <form>
+        <div class="form-group">
+          <input type="text" class="form-control" name="keyword" placeholder="keyword" {% if keyword %} value="{{ keyword }}" {% endif %}>
+          
+        </div>
+        
+
+        <div class="form-inline">
+          <div class="radio">
+            <label>
+              <input type="radio" name="flag" value="all" checked >
+              All
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="flag" value="repo" {% if flag == 'repo' %} checked {% endif %} >
+              Repo
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="flag" value="description" {% if flag == 'description' %} checked {% endif %} >
+              Description
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="flag" value="author" {% if flag == 'author' %} checked {% endif %}>
+              Author
+            </label>
+          </div>
+        </div>
+
+        <br>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Search</button>
+        </div>
+
+
+      </form>
+      <hr>
+    </div>
+    <form method="POST">
+    {% csrf_token %}
+      {% for repo in repos %}
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name='repos' value={{ repo.id }} > {{ repo.full_name }} <a href="{{ repo.link }}"><i class="fa fa-github"></i></a>
+            </label>
+              
+            
+            <p><small>{{ repo.desc }}</small></p>
+            <p><span class="label label-default"><small>{{repo.language.name}}</small></span></p>
+            <hr>
+          </div>
+        </div>
+
+      {% empty %}
+        <div class='col-md-12'>
+          No repo found yet！
+        </div>
+      {% endfor %}
+
+      {% if repos %}
+      <div class="col-md-12">
+        <button class="btn btn-default">Submit</button>
+      </div>
+      {% endif %}
+
+    </form>
+    {% if repos %}
+    <div class="col-md-12">
+        {% bootstrap_pagination repos url=url_parm %}
+    </div>
+    {% endif %}
+  </div>
+  
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

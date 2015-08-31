@@ -2,10 +2,11 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 import requests
 
@@ -231,6 +232,82 @@ class MyCollectionEditView(View):
 
         data['repos'] = repos
         return render(request, self.template_name, data)
+
+    def post(self, request, pk, from_starred=None):
+        data = {}
+        pk = int(pk)
+
+        try:
+            collection = models.Collection.objects.get(pk=pk)
+            data['collection'] = collection
+
+        except models.Collection.DoesNotExist:
+            raise Http404
+
+        # collection_repo_ids = collection.repos.all().values_list('id', flat=True)
+
+        repo_ids = request.POST.getlist('repos')
+        collection.repos.add(*repo_ids)
+        
+        msg = 'Succeed to add repos to collection `{0}`'.format(collection.name)
+        messages.add_message(request, messages.SUCCESS, msg)
+        # url = reverse('main:my_collection', args=(pk,))
+        url = request.get_full_path()
+        return redirect(url)
+
+class SearchRepos4Collection(View):
+    template_name = 'myadmin/collection_search_repo.html'
+    def get(self, request, pk):
+        data = common_data()
+        data['all'] = True
+
+        pk = int(pk)
+
+        try:
+            collection = models.Collection.objects.get(pk=pk)
+            data['collection'] = collection
+
+        except models.Collection.DoesNotExist:
+            raise Http404
+
+        collection_repo_ids = collection.repos.all().values_list('id', flat=True)
+
+        repos = models.Repo.objects.exclude(id__in=collection_repo_ids)
+
+        keyword = request.GET.get('keyword')
+        flag = request.GET.get('flag')
+        data['keyword'] = keyword
+        data['flag'] = flag
+
+        if flag:
+            url_parm = '?keyword={0}&flag={1}'.format(keyword, flag)
+            data['url_parm'] = url_parm
+
+        if flag == 'repo':
+            repos = repos.filter(name__icontains=keyword)
+        elif flag == 'description':
+            repos = repos.filter(desc__icontains=keyword)
+        elif flag == 'author':
+            repos = repos.filter(author__icontains=keyword)
+        elif flag == 'all':
+            repos = repos.filter(Q(name__icontains=keyword)|Q(desc__icontains=keyword)|Q(author__icontains=keyword))
+
+        paginator = Paginator(repos, PER_PAGE_ADMIN)
+        page = request.GET.get('page')
+        try:
+            repos = paginator.page(page)
+        except PageNotAnInteger:
+            repos = paginator.page(1)
+        except EmptyPage:
+            repos = paginator.page(paginator.num_pages)
+
+        data['repos'] = repos
+
+        return render(request, self.template_name, data)
+
+    def post(self, request, pk):
+        view = MyCollectionEditView()
+        return view.post(request, pk)
 
 
 

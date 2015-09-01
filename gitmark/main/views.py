@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import requests
 
-from . import models, forms
+from . import models, forms, tasks
 
 PER_PAGE = settings.GITMARK['PER_PAGE']
 PER_PAGE_ADMIN = settings.GITMARK['PER_PAGE_ADMIN']
@@ -30,6 +30,7 @@ class AdminIndexView(View):
     template_name = 'myadmin/index.html'
     def get(self, request):
         data = common_data()
+        tasks.test_celery.delay()
         return render(request, self.template_name, data)
 
 class HomeView(View):
@@ -45,42 +46,48 @@ class ImportRepoView(View):
 
     def post(self, request):
         github_user = request.POST.get('github_username')
-        def build_api(user, page):
-            return 'https://api.github.com/users/{0}/starred?page={1}'.format(user, page)
+        # def build_api(user, page):
+        #     return 'https://api.github.com/users/{0}/starred?page={1}'.format(user, page)
 
-        def import_repos(starred_repos):
-            for starred_repo in starred_repos:
-                language, created = models.Language.objects.get_or_create(name=(starred_repo.get('language') or 'unknown'))
+        # def import_repos(starred_repos):
+        #     for starred_repo in starred_repos:
+        #         language, created = models.Language.objects.get_or_create(name=(starred_repo.get('language') or 'unknown'))
 
-                repo, created = models.Repo.objects.get_or_create(full_name=starred_repo.get('full_name'), 
-                    defaults={
-                        'name' : starred_repo.get('name'),
-                        'link' : starred_repo.get('html_url'),
-                        'author' : starred_repo.get('owner').get('login'),
-                        'author_link' : starred_repo.get('owner').get('html_url'),
-                        'desc' : starred_repo.get('description'),
-                        'language' :language
-                    })
-                # repo_starred, created = models.RepoStarred.objects.get_or_create(repo=repo, user=request.user)
-                repo.starred_users.add(request.user)
+        #         repo, created = models.Repo.objects.get_or_create(full_name=starred_repo.get('full_name'), 
+        #             defaults={
+        #                 'name' : starred_repo.get('name'),
+        #                 'link' : starred_repo.get('html_url'),
+        #                 'author' : starred_repo.get('owner').get('login'),
+        #                 'author_link' : starred_repo.get('owner').get('html_url'),
+        #                 'desc' : starred_repo.get('description'),
+        #                 'language' :language
+        #             })
+        #         # repo_starred, created = models.RepoStarred.objects.get_or_create(repo=repo, user=request.user)
+        #         repo.starred_users.add(request.user)
 
-        # api = 'https://api.github.com/users/{0}/starred?page=1'.format(github_user)
-        page = 1
-        api = build_api(github_user, page)
-        # return redirect(api)
-        res = requests.get(api)
-        starred_repos = res.json()
+        # page = 1
+        # api = build_api(github_user, page)
+        # # return redirect(api)
+        # res = requests.get(api)
+        # starred_repos = res.json()
 
-        while len(starred_repos) > 0:
-            import_repos(starred_repos)
+        # while len(starred_repos) > 0:
+        #     import_repos(starred_repos)
 
-            page += 1
-            api = build_api(github_user, page)
-            res = requests.get(api)
-            starred_repos = res.json()
+        #     page += 1
+        #     api = build_api(github_user, page)
+        #     res = requests.get(api)
+        #     starred_repos = res.json()
+
+        # cur_user = User.objects.get(username=request.user.username)
+        # print cur_user.username
+        tasks.import_github_starred_repos.delay(github_user, request.user.username)
             
-
-        return HttpResponse('Succeed to import repos')
+        # return HttpResponse('Succeed to import repos')
+        msg = 'Start importing at background'
+        messages.add_message(request, messages.SUCCESS, msg)
+        url = '.'
+        return redirect(url)
 
 class StarredRepoView(View):
     template_name = 'myadmin/starred_repo.html'

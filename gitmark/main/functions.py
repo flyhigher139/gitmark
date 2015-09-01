@@ -3,8 +3,8 @@
 
 from . import models
 
-def build_github_starred_api(username, page):
-            return 'https://api.github.com/users/{0}/starred?page={1}'.format(username, page)
+def build_github_starred_api(username, page, per_page=100):
+            return 'https://api.github.com/users/{0}/starred?page={1}&per_page={1}'.format(username, page, per_page)
 
 def import_repos(github_starred_repos, gitmark_user):
     for starred_repo in github_starred_repos:

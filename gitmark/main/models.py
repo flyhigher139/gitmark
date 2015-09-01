@@ -18,7 +18,7 @@ class Repo(models.Model):
     desc = models.TextField(blank=True, null=True)
     language = models.ForeignKey(Language, blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
-    starred_users = models.ManyToManyField(User)
+    starred_users = models.ManyToManyField(User, blank=True)
 
    
 
@@ -27,7 +27,7 @@ class Repo(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=256)
-    repos = models.ManyToManyField(Repo)
+    repos = models.ManyToManyField(Repo, blank=True)
     counts = models.IntegerField(default=0)
 
 
@@ -45,16 +45,16 @@ class Collection(models.Model):
     def __str__(self):
         return self.user.username + '->' + self.name
 
-class UserAction(models.Model):
-    user = models.ForeignKey(User)
-    repo = models.ForeignKey(Repo)
-    action = models.CharField(max_length=256)
+# class UserAction(models.Model):
+#     user = models.ForeignKey(User)
+#     repo = models.ForeignKey(Repo)
+#     action = models.CharField(max_length=256)
 
 
 
-class RepoStarred(models.Model):
-    repo = models.ForeignKey(Repo)
-    user = models.ForeignKey(User)
+# class RepoStarred(models.Model):
+#     repo = models.ForeignKey(Repo)
+#     user = models.ForeignKey(User)
 
-    def __unicode__(self):
-        return self.user.username + ' -> ' + self.repo.full_name
+#     def __unicode__(self):
+#         return self.user.username + ' -> ' + self.repo.full_name

@@ -9,7 +9,7 @@ from django.dispatch import receiver
 # Create your models here.
 
 class Account(models.Model):
-    display_name = models.CharField(max_length='128')
+    display_name = models.CharField(max_length=128)
     biography = models.TextField(null=True, blank=True)
     homepage = models.URLField(null=True, blank=True)
     weixin = models.URLField(null=True, blank=True)
@@ -18,6 +18,8 @@ class Account(models.Model):
     twitter = models.URLField(null=True, blank=True)
     github = models.URLField(null=True, blank=True)
     user = models.OneToOneField(User)
+    github_username = models.CharField(null=True, blank=True, max_length=128)
+    # github_token = models.TextField(null=True, blank=True)
 
 
     @receiver(post_save, sender=User)

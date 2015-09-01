@@ -19,5 +19,5 @@ def import_repos(github_starred_repos, gitmark_user):
                 'desc' : starred_repo.get('description'),
                 'language' :language
             })
-        
+
         repo.starred_users.add(gitmark_user)

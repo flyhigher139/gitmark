@@ -51,6 +51,7 @@ class ImportRepoView(View):
 
         # def import_repos(starred_repos):
         #     for starred_repo in starred_repos:
+        #         # print starred_repo
         #         language, created = models.Language.objects.get_or_create(name=(starred_repo.get('language') or 'unknown'))
 
         #         repo, created = models.Repo.objects.get_or_create(full_name=starred_repo.get('full_name'), 
@@ -67,9 +68,9 @@ class ImportRepoView(View):
 
         # page = 1
         # api = build_api(github_user, page)
-        # # return redirect(api)
-        # res = requests.get(api)
+
         # starred_repos = res.json()
+
 
         # while len(starred_repos) > 0:
         #     import_repos(starred_repos)

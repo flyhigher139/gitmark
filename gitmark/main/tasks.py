@@ -22,6 +22,10 @@ def import_github_starred_repos(github_username, gitmark_username):
     starred_repos = res.json()
     print page
 
+    # GitHub API rate limit exceeded 
+    if not starred_repos is list:
+        return
+
     while len(starred_repos) > 0:
         functions.import_repos(starred_repos, cur_user)
 

@@ -162,5 +162,9 @@ GITMARK = {
     # 'COMMENT_OPT':{
     #     'duoshuo':'mayblog',
     # },
+    'GITHUB': {
+        'client_id': os.environ.get('GITHUB_ID') or 'f8bccbae20d2dd550ee2',
+        'client_secret': os.environ.get('GITHUB_SECRET') or '910d7d4fd45960824e26d137fa07944ed16cb971'
+    }
 }
 

@@ -1,6 +1,18 @@
 {% extends 'admin_base.html' %}
 {% block main %}
-    <p>Waiting to code</p>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h3>GitHub Account</h3>
+        <p>
+        {% if request.user.account.github_username %}
+            GitHub: <a href="#">{{ request.user.account.github_username }}</a> | 
+            <a href="#">Remove</a>
+        {% else %}
+            <a href="{% url 'accounts:github_auth' %}">Link to GitHub</a>
+        {% endif %}
+        </p>
+    </div>
+</div>
 {% endblock %}
 
 

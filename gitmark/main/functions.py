@@ -21,3 +21,22 @@ def import_repos(github_starred_repos, gitmark_user):
             })
 
         repo.starred_users.add(gitmark_user)
+
+####################################
+# legacy_oauth example
+####################################
+
+# def legacy_oauth():
+#     username = 'gevin'
+#     password = 'gevin'
+#     client_id = '8UbOpkcldxGI3US78NcnROyxma3BUP2P595T4Hl6'
+#     client_secret = 'exi0Al9U3mx2JnINSUfmcb9adLz1NZNbuAbO56C1lHGpNh4BeKJSV6j7QBPfhJJMs9cOVqVYuCunYbeNjm64O14FukRP3eMz4KS6rG8tedGhYpRvI91JlvrgdkcbBVIU'
+#     oauth = OAuth2Session(client=LegacyApplicationClient(client_id=client_id))
+#     token = oauth.fetch_token(token_url=token_url,
+#         username=username, password=password, client_id=client_id,
+#         client_secret=client_secret)
+
+#     url = 'http://localhost:8000/api/user/images/'
+#     auth = OAuth2(client_id=client_id, token=token)
+#     res = requests.get(url, auth=auth)
+#     return res.text

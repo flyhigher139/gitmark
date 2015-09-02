@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -13,10 +15,15 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+from requests_oauthlib import OAuth2Session
+
 from . import forms
 
+client_id = settings.GITMARK['GITHUB']['client_id']
+client_secret = settings.GITMARK['GITHUB']['client_secret']
+authorization_base_url = 'https://github.com/login/oauth/authorize'
+token_url = 'https://github.com/login/oauth/access_token'
 
-# Create your views here.
 class LoginView(View):
     template_name = 'accounts/simple_form.html'
     def get(self, request, form=None):
@@ -313,6 +320,67 @@ class ChangePasswordView(View):
             return redirect(url)
 
         return self.get(request, form)
+
+####################
+# GitHub Auth
+####################
+
+def github_auth(request):
+    """Step 1: User Authorization.
+
+    Redirect the user/resource owner to the OAuth provider (i.e. Github)
+    using an URL with a few key OAuth parameters.
+    """
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    github = OAuth2Session(client_id)
+    authorization_url, state = github.authorization_url(authorization_base_url)
+
+    # State is used to prevent CSRF, keep this for later.
+    request.session['oauth_state'] = state
+    return redirect(authorization_url)
+
+
+# Step 2: User authorization, this happens on the provider.
+
+
+def github_callback(request):
+    """ Step 3: Retrieving an access token.
+
+    The user has been redirected back from the provider to your registered
+    callback URL. With this redirection comes an authorization code included
+    in the redirect URL. We will use that to obtain an access token.
+    """
+
+    github = OAuth2Session(client_id, state=request.session['oauth_state'])
+    token = github.fetch_token(token_url, client_secret=client_secret,
+                               authorization_response=request.get_full_path())
+
+    # At this point you can fetch protected resources but lets save
+    # the token and show how this is done from a persisted token
+    # in /profile.
+    request.session['oauth_token'] = token
+
+    # Link user to github user if condition as follow:
+
+    # github = OAuth2Session(client_id, token=request.session['oauth_token'])
+    # return HttpResponse(github.get('https://api.github.com/user').text)
+
+    # Log user in if condition as follow:
+    # ...
+
+    # Register user if condition as follow:
+    #...
+
+    url = reverse('main:admin_index')
+    return redirect(url)
+
+
+# # @app.route("/profile", methods=["GET"])
+# def profile():
+#     """Fetching a protected resource using an OAuth 2 token.
+#     """
+#     github = OAuth2Session(client_id, token=session['oauth_token'])
+#     return jsonify(github.get('https://api.github.com/user').json())
 
 
 

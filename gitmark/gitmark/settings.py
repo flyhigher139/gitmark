@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from env import github, email
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -163,8 +165,8 @@ GITMARK = {
     #     'duoshuo':'mayblog',
     # },
     'GITHUB': {
-        'client_id': os.environ.get('GITHUB_ID') or 'f8bccbae20d2dd550ee2',
-        'client_secret': os.environ.get('GITHUB_SECRET') or '910d7d4fd45960824e26d137fa07944ed16cb971'
+        'client_id': os.environ.get('GITHUB_ID') or github['client_id'],
+        'client_secret': os.environ.get('GITHUB_SECRET') or github['client_secret'],
     }
 }
 

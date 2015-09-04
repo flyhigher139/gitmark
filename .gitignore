@@ -3,4 +3,4 @@
 *.sqlite3
 gitmark/static/prototype/*.png
 venv/
-migrations/
+#migrations/

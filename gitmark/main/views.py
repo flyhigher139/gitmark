@@ -48,48 +48,12 @@ class ImportRepoView(View):
 
     def post(self, request, starred=True):
         github_user = request.POST.get('github_username')
-        # def build_api(user, page):
-        #     return 'https://api.github.com/users/{0}/starred?page={1}'.format(user, page)
-
-        # def import_repos(starred_repos):
-        #     for starred_repo in starred_repos:
-        #         # print starred_repo
-        #         language, created = models.Language.objects.get_or_create(name=(starred_repo.get('language') or 'unknown'))
-
-        #         repo, created = models.Repo.objects.get_or_create(full_name=starred_repo.get('full_name'), 
-        #             defaults={
-        #                 'name' : starred_repo.get('name'),
-        #                 'link' : starred_repo.get('html_url'),
-        #                 'author' : starred_repo.get('owner').get('login'),
-        #                 'author_link' : starred_repo.get('owner').get('html_url'),
-        #                 'desc' : starred_repo.get('description'),
-        #                 'language' :language
-        #             })
-        #         # repo_starred, created = models.RepoStarred.objects.get_or_create(repo=repo, user=request.user)
-        #         repo.starred_users.add(request.user)
-
-        # page = 1
-        # api = build_api(github_user, page)
-
-        # starred_repos = res.json()
-
-
-        # while len(starred_repos) > 0:
-        #     import_repos(starred_repos)
-
-        #     page += 1
-        #     api = build_api(github_user, page)
-        #     res = requests.get(api)
-        #     starred_repos = res.json()
-
-        # cur_user = User.objects.get(username=request.user.username)
-        # print cur_user.username
+        
         if starred:
-            tasks.import_github_starred_repos.delay(github_user, request.user.username)
+            tasks.import_github_repos.delay(github_user, gitmark_username=request.user.username)
         else:
             tasks.import_github_repos.delay(github_user)
-            
-        # return HttpResponse('Succeed to import repos')
+
         msg = 'Start importing at background'
         messages.add_message(request, messages.SUCCESS, msg)
         url = '.'

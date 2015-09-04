@@ -170,6 +170,9 @@ GITMARK = {
         'client_secret': os.environ.get('GITHUB_SECRET') or github['client_secret'],
         'app_user': os.environ.get('APP_USER') or github['app_user'],
         'app_pass': os.environ.get('APP_PASS') or github['app_pass'],
+        'page_limit_large': 100,
+        'page_limit_medium': 50,
+        'page_limit_small': 30,
     }
 }
 

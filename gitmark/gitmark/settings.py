@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'guardian',
     'main',
     'accounts',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (

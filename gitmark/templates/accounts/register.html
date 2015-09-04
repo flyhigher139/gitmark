@@ -1,0 +1,21 @@
+{% extends "admin_base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main %}
+{% load bootstrap3 %}
+<div class="row">
+    <div class="col-xs-6 col-sm-3"></div>
+    <div class="col-xs-6 col-sm-6">
+        <form method="POST" action="">
+        {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-info" name="login"> Register </button>
+            <button type="submit" class="btn btn-success" name="github" value='true'> Register with <i class="fa fa-github"></i></button>
+        </form>
+    </div>
+    <div class="col-xs-6 col-sm-3"></div>
+</div>
+
+{% endblock %}

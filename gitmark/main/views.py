@@ -41,10 +41,12 @@ class HomeView(View):
 
 class ImportRepoView(View):
     template_name = 'myadmin/import_repo.html'
-    def get(self, request):
-        return render(request, self.template_name)
+    def get(self, request, starred=True):
+        data = common_data()
+        data['starred'] = starred
+        return render(request, self.template_name, data)
 
-    def post(self, request):
+    def post(self, request, starred=True):
         github_user = request.POST.get('github_username')
         # def build_api(user, page):
         #     return 'https://api.github.com/users/{0}/starred?page={1}'.format(user, page)
@@ -82,7 +84,10 @@ class ImportRepoView(View):
 
         # cur_user = User.objects.get(username=request.user.username)
         # print cur_user.username
-        tasks.import_github_starred_repos.delay(github_user, request.user.username)
+        if starred:
+            tasks.import_github_starred_repos.delay(github_user, request.user.username)
+        else:
+            tasks.import_github_repos.delay(github_user)
             
         # return HttpResponse('Succeed to import repos')
         msg = 'Start importing at background'

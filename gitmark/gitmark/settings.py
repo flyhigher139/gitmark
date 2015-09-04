@@ -167,6 +167,8 @@ GITMARK = {
     'GITHUB': {
         'client_id': os.environ.get('GITHUB_ID') or github['client_id'],
         'client_secret': os.environ.get('GITHUB_SECRET') or github['client_secret'],
+        'app_user': os.environ.get('APP_USER') or github['app_user'],
+        'app_pass': os.environ.get('APP_PASS') or github['app_pass'],
     }
 }
 

@@ -18,6 +18,7 @@ urlpatterns = [
 # admin urls
 urlpatterns += [    
     url(r'^repos/import/$', views.ImportRepoView.as_view(), name='admin_import_repo'),
+    url(r'^repos/import/any/$', views.ImportRepoView.as_view(), {'starred':False}, name='admin_import_any_repo'),
     url(r'^repos/starred/$', views.StarredRepoView.as_view(), name='admin_starred_repo'),
     url(r'^collections/$', views.MyCollectionView.as_view(), name='my_collections'),
     url(r'^collections/(?P<pk>[0-9]+)/$', views.MyCollectionDetailView.as_view(), name='my_collection'),

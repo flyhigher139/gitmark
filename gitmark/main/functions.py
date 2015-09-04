@@ -4,9 +4,9 @@
 from . import models
 
 def build_github_starred_api(username, page, per_page=100):
-            return 'https://api.github.com/users/{0}/starred?page={1}&per_page={1}'.format(username, page, per_page)
+    return 'https://api.github.com/users/{0}/starred?page={1}&per_page={2}'.format(username, page, per_page)
 
-def import_repos(github_starred_repos, gitmark_user):
+def import_repos(github_starred_repos, gitmark_user=None):
     for starred_repo in github_starred_repos:
         language, created = models.Language.objects.get_or_create(name=(starred_repo.get('language') or 'unknown'))
 
@@ -19,8 +19,11 @@ def import_repos(github_starred_repos, gitmark_user):
                 'desc' : starred_repo.get('description'),
                 'language' :language
             })
+        # print 'saved'
 
-        repo.starred_users.add(gitmark_user)
+        if gitmark_user:
+            repo.starred_users.add(gitmark_user)
+            # print 'starred'
 
 ####################################
 # legacy_oauth example

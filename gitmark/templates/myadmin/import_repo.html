@@ -8,7 +8,11 @@
                 <label for="InputGitHubUsername">GitHub username </label>
                 <input type="text" class="form-control" id="InputGitHubUsername" placeholder="GitHub username" name="github_username">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            {% if starred %}
+                <button type="submit" class="btn btn-info">Import</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">Import To GitMark</button>
+            {% endif %}
         </form>
     </div>
 </div>

@@ -14,9 +14,12 @@ from django.views.generic import View
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db import IntegrityError
 
-from requests_oauthlib import OAuth2Session
+import requests
+from requests_oauthlib import OAuth2Session, OAuth2
 
+from gitmark import github_apis
 from . import forms
 
 client_id = settings.GITMARK['GITHUB']['client_id']
@@ -72,7 +75,7 @@ class LogoutView(View):
         return redirect(url)
 
 class RegisterView(View):
-    template_name = 'accounts/simple_form.html'
+    template_name = 'accounts/register.html'
     def get(self, request, form=None):
         if not form:
             form = forms.RegisterForm()
@@ -83,6 +86,13 @@ class RegisterView(View):
 
     def post(self, request):
         form = forms.RegisterForm(request.POST)
+        if request.POST.get('github'):
+            request.session['oauth_callback_type'] = 'register'
+            
+            return github_auth(request)
+
+            # return HttpResponse('ready to code')
+
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
@@ -336,7 +346,7 @@ def github_auth(request):
     authorization_url, state = github.authorization_url(authorization_base_url)
 
     # State is used to prevent CSRF, keep this for later.
-    request.session['oauth_state'] = state
+    request.session['oauth_user_state'] = state
     return redirect(authorization_url)
 
 
@@ -351,28 +361,62 @@ def github_callback(request):
     in the redirect URL. We will use that to obtain an access token.
     """
 
-    github = OAuth2Session(client_id, state=request.session['oauth_state'])
+    github = OAuth2Session(client_id, state=request.session['oauth_user_state'])
     token = github.fetch_token(token_url, client_secret=client_secret,
                                authorization_response=request.get_full_path())
 
     # At this point you can fetch protected resources but lets save
     # the token and show how this is done from a persisted token
     # in /profile.
-    request.session['oauth_token'] = token
+    request.session['oauth_user_token'] = token
 
-    # Link user to github user if condition as follow:
-
-    # github = OAuth2Session(client_id, token=request.session['oauth_token'])
-    # return HttpResponse(github.get('https://api.github.com/user').text)
-
-    # Log user in if condition as follow:
-    # ...
-
-    # Register user if condition as follow:
-    #...
+    # response to callback as follow:
+    if request.session['oauth_callback_type'] == 'register':
+        return github_register_behavior(request)
 
     url = reverse('main:admin_index')
     return redirect(url)
+
+def github_register_behavior(request):
+    url = github_apis.auth_user()
+    auth = OAuth2(client_id=client_id, token=request.session['oauth_user_token'])
+    res = requests.get(url, auth=auth)
+    if res.status_code != 200:
+        msg = 'GitHub authorization failed'
+        url = reverse('accounts:register')
+        messages.add_message(request, messages.ERROR, msg)
+        return redirect(url)
+
+    github_user = res.json()
+    username = github_user.get('login')
+    email = github_user.get('email')
+    github_url = github_user.get('html_url')
+
+    def create_user(username, email, password):
+        try:
+            user = User.objects.create_user(username, email, 'password')
+            user.save()
+
+            return user
+
+        except IntegrityError:
+            import random
+            username = username + str(random,range(1, 1000))
+            create_user(username, email, password, github_username, github_url)
+
+    user = create_user(username, email, None)
+    account = user.account
+    account.github_username = username
+    account.github = github_url
+    account.save()
+
+    user = authenticate(username=user.username, password='password')
+    login(request, user)
+
+    # url = reverse('accounts:login')
+    url = reverse('main:admin_index')
+    return redirect(url)
+
 
 
 # # @app.route("/profile", methods=["GET"])

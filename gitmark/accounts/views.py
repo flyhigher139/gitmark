@@ -20,7 +20,7 @@ import requests
 from requests_oauthlib import OAuth2Session, OAuth2
 
 from gitmark import github_apis
-from . import forms
+from . import forms, models
 
 client_id = settings.GITMARK['GITHUB']['client_id']
 client_secret = settings.GITMARK['GITHUB']['client_secret']
@@ -71,6 +71,7 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         msg = 'Succeed to logout'
+        messages.add_message(request, messages.SUCCESS, msg)
         url = reverse('accounts:login')
         return redirect(url)
 
@@ -392,19 +393,26 @@ def github_register_behavior(request):
     email = github_user.get('email')
     github_url = github_user.get('html_url')
 
+    users = models.Account.objects.filter(github_username=username)
+    if len(users) > 0:
+        msg = 'You have registered with Github'
+        messages.add_message(request, messages.ERROR, msg)
+        url = reverse('accounts:login')
+        return redirect(url)
+
     def create_user(username, email, password):
         try:
-            user = User.objects.create_user(username, email, 'password')
+            user = User.objects.create_user(username, email, password)
             user.save()
 
             return user
 
         except IntegrityError:
-            import random
-            username = username + str(random(range(1, 1000)))
-            create_user(username, email, password, github_username, github_url)
+            from random import random, randint
+            username = username + str(randint(1, 1000))
+            return create_user(username, email, password)
 
-    user = create_user(username, email, None)
+    user = create_user(username, email, 'password')
     account = user.account
     account.github_username = username
     account.github = github_url

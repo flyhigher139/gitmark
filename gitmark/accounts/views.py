@@ -401,7 +401,7 @@ def github_register_behavior(request):
 
         except IntegrityError:
             import random
-            username = username + str(random,range(1, 1000))
+            username = username + str(random(range(1, 1000)))
             create_user(username, email, password, github_username, github_url)
 
     user = create_user(username, email, None)

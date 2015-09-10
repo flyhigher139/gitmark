@@ -86,13 +86,12 @@ class RegisterView(View):
         return render(request, self.template_name, data)
 
     def post(self, request):
-        form = forms.RegisterForm(request.POST)
         if request.POST.get('github'):
             request.session['oauth_callback_type'] = 'register'
             
             return github_auth(request)
 
-            # return HttpResponse('ready to code')
+        form = forms.RegisterForm(request.POST)
 
         if form.is_valid():
             username = form.cleaned_data['username']

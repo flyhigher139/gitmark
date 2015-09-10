@@ -12,6 +12,11 @@
         {% csrf_token %}
             {% bootstrap_form form %}
             <button type="submit" class="btn btn-info" name="login"> Register </button>
+            <!-- <button type="submit" class="btn btn-success" name="github" value='true'> Register with <i class="fa fa-github"></i></button> -->
+        </form>
+        <hr>
+        <form method="POST" action="">
+        {% csrf_token %}
             <button type="submit" class="btn btn-success" name="github" value='true'> Register with <i class="fa fa-github"></i></button>
         </form>
     </div>

@@ -30,7 +30,7 @@ class AdminIndexView(View):
     template_name = 'myadmin/index.html'
     def get(self, request):
         data = common_data()
-        tasks.test_celery.delay()
+        # tasks.test_celery.delay()
         return render(request, self.template_name, data)
 
 class HomeView(View):

@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import requests
 
+from accounts import github_auth
 from . import models, forms, tasks
 
 PER_PAGE = settings.GITMARK['PER_PAGE']
@@ -32,6 +33,12 @@ class AdminIndexView(View):
         data = common_data()
         # tasks.test_celery.delay()
         return render(request, self.template_name, data)
+
+    def post(self, request):
+        if request.POST.get('link_github'):
+            request.session['oauth_callback_type'] = 'link_github'
+            
+            return github_auth.github_auth(request)
 
 class HomeView(View):
     template_name = 'main/home.html'

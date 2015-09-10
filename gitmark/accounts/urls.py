@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import patterns, include, url
-from . import views
+from . import views, github_auth
 
 # urlpatterns = patterns('',
 #     # Examples:
@@ -32,6 +32,6 @@ urlpatterns = [
 
 #GitHub Auth
 urlpatterns +=[
-    url(r'^github/auth/$', views.github_auth, name='github_auth'),
-    url(r'^github/callback/$', views.github_callback, name='github_callback'),
+    url(r'^github/auth/$', github_auth.github_auth, name='github_auth'),
+    url(r'^github/callback/$', github_auth.github_callback, name='github_callback'),
 ]

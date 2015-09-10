@@ -36,9 +36,17 @@ class AdminIndexView(View):
 
     def post(self, request):
         if request.POST.get('link_github'):
-            request.session['oauth_callback_type'] = 'link_github'
-            
+            request.session['oauth_callback_type'] = 'link_github'           
             return github_auth.github_auth(request)
+        
+        elif request.POST.get('rm_github'):
+            account = request.user.account
+            account.github_username = ''
+            account.github = ''
+            account.save()
+
+        url = reverse('main:admin_index')
+        return redirect(url) 
 
 class HomeView(View):
     template_name = 'main/home.html'

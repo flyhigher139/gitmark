@@ -62,7 +62,18 @@ class ImportRepoView(View):
         return render(request, self.template_name, data)
 
     def post(self, request, starred=True):
-        github_user = request.POST.get('github_username')
+        if request.POST.get('import_mine'):
+            github_user = request.user.account.github_username
+            if not github_user:
+                msg = 'You have not associated with GitHub yet'
+                messages.add_message(request, messages.ERROR, msg)
+                url = reverse('main:admin_index')
+                return redirect(url)
+
+        else:
+            github_user = request.POST.get('github_username')
+
+        # return HttpResponse(github_user)
         
         if starred:
             tasks.import_github_repos.delay(github_user, gitmark_username=request.user.username)

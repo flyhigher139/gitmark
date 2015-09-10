@@ -7,8 +7,8 @@
         {% csrf_token %}
             <p>
             {% if request.user.account.github_username %}
-                GitHub: <a href="#">{{ request.user.account.github_username }}</a> | 
-                <button type="submit" class="btn btn-default" name="rm_github" value='true'> rm <i class="fa fa-github"></i></button>
+                <i class="fa fa-github"> </i> <a href="#">{{ request.user.account.github_username }}</a> | 
+                <button type="submit" class="btn btn-default" name="rm_github" value='true'>  <i class="fa fa-trash-o"></i></button>
             {% else %}
                 <button type="submit" class="btn btn-success" name="link_github" value='true'> Link to <i class="fa fa-github"></i></button>
             {% endif %}

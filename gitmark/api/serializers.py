@@ -13,3 +13,8 @@ class UserSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ('id', 'username', 'email', 'password')
 		extra_kwargs = {'password': {'write_only': True}}
+
+class RepoSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = models.Repo
+		fields = ('name', 'full_name', 'link', 'author', 'author_link', 'desc', 'language', 'create_date')

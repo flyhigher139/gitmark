@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from main import views
+from main import views, ajax
 
 from django.contrib import admin
 # admin.autodiscover()
@@ -25,6 +25,13 @@ urlpatterns += [
     url(r'^collections/(?P<pk>[0-9]+)/edit/$', views.MyCollectionEditView.as_view(), {'from_starred':True}, name='my_collection_edit_starred'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/all/$', views.MyCollectionEditView.as_view(), {'from_starred':False}, name='my_collection_edit_all'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/search/$', views.SearchRepos4Collection.as_view(), name='my_collection_edit_search'),
+]
+
+# ajax
+urlpatterns += [
+    url(r'^ajax/user/star-activity/(?P<pk>[0-9]+)/$', ajax.change_star_status, name='change_star_status'),
+    url(r'^ajax/user/collections/$', ajax.list_user_collections, name='user_collection_list'),
+    url(r'^ajax/user/repo/(?P<repo_id>[0-9]+)/collections/$', ajax.repo_collection_status, name='repo_collection_status'),
 ]
 
 

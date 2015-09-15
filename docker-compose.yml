@@ -1,0 +1,55 @@
+gitmark:
+  # restart: always
+  build: ./gitmark
+  ports:
+    - "8888:8888"
+    - "5000:5000"
+  links:
+    - postgres:postgres
+  volumes:
+    - /usr/src/app/static
+    # - /home/gitmark/var:/var
+  env_file: .env
+  # command: /usr/local/bin/uwsgi --ini /usr/src/app/mayblog_uwsgi.ini
+  # command: /usr/local/bin/uwsgi --ini mayblog_uwsgi.ini
+  # command: /usr/bin/python2.7 manage.py runserver 0.0.0.0:5000
+  # command: /bin/sh -c "while true; do echo hello world; sleep 1; done"
+
+
+postgres:
+  # restart: always
+  image: postgres:9.4.4
+  env_file: .env
+  # volumes_from:
+  #   - data
+  volumes:
+    - /var/lib/postgres
+  ports:
+    - "5432:5432"
+  # command: true
+
+
+# data:
+#   restart: always
+#   image: sameersbn/mysql:latest
+#   volumes:
+#     # - /var/lib/mysql
+#     - /home/mayblog/data:/opt/mayblog/data
+#   command: true
+
+
+# mysql:
+#   restart: always
+#   image: mysql:5.7
+#   # env_file: .env
+#   volumes_from:
+#     - data
+#   ports:
+#     - "3306:3306"
+
+# data:
+#   restart: always
+#   image: mysql:5.7
+#   volumes:
+#     - /var/lib/mysql
+#   command: true

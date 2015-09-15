@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^repos/(?P<pk>[0-9]+)/stargazers/$', views.StargazersListView.as_view()),
     url(r'^users/(?P<pk>[0-9]+)/starred/$', views.UserStarredRepos.as_view()),
     url(r'^user/starred/$', views.UserStarredRepos.as_view()),
+    url(r'^user/starred/(?P<pk>[0-9]+)/$', views.StarActivityView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

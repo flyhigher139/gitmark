@@ -18,10 +18,12 @@ def change_star_status(request, pk):
 
     if request.user in repo.starred_users.all():
         repo.starred_users.remove(request.user)
+        msg = 'unstarred'
     else:
         repo.starred_users.add(request.user)
+        msg = 'starred'
 
-    return HttpResponse('succeed')
+    return HttpResponse(msg)
 
 def list_user_collections(request):
     collections = models.Collection.objects.filter(user=request.user)

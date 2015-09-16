@@ -14,11 +14,12 @@
         <div class="col-md-8">
             <p>{{ starred_repo.desc}}</p>
             <!-- <p class="grey-text"><small>Language: {{starred_repo.language.name}}</small> </p> -->
-            <p><span class="label label-default"><small>{{starred_repo.language.name}}</small></span></p>
+            <p><span class="label label-default"><small>{{ starred_repo.language.name }}</small></span></p>
         </div>
         <div class="col-md-4">
             <div class="btn-group" role="group" aria-label="...">
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-star"></i> unstar</button>
+              <button type="button" class="btn btn-default btn-sm btn-star" data-url="{% url 'main:change_star_status' starred_repo.id %}">
+               <i class="fa fa-star"></i> unstar</button>
 
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -68,6 +69,35 @@
       });
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    // star/unstar a repo
+    $('.btn-star').on('click', function(event){
+        // alert($(this).data('id'));
+        var url = $(this).data('url');
+        // alert($(this).text())
+        btn = $(this);
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            // data: {'name': result},
+            success: function(result){
+                // location.reload();
+                // alert(url);
+                console.log(result);
+                var val = ''
+                if(result == 'unstarred'){
+                    val = '<i class="fa fa-star-o"></i> star';
+                    
+                }else{
+                    val = '<i class="fa fa-star"></i> unstar';
+                }
+                // $(this).text(val);
+                // console.log(val);
+                btn.html(val)
+            }
+          })
     });
 </script>
 {% endblock %}

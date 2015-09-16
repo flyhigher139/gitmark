@@ -49,8 +49,8 @@ def repo_collection_status(request, repo_id):
     for collection in collections:
         obj = {
             'id':collection.id,
-            'name': collection.name,
-            'selected': repo in collection.repos.all()
+            'label': collection.name,
+            'isChecked': repo in collection.repos.all()
         }
         collection_list.append(obj)
 

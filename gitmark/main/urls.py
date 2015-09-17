@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from main import views, ajax
+from main import views, ajax, init
 
 from django.contrib import admin
 # admin.autodiscover()
@@ -15,8 +15,10 @@ urlpatterns = [
     url(r'^home/$', views.HomeView.as_view(), name='home'),
 ]
 
+
+
 # admin urls
-urlpatterns += [    
+urlpatterns += [
     url(r'^repos/import/$', views.ImportRepoView.as_view(), name='admin_import_repo'),
     url(r'^repos/import/any/$', views.ImportRepoView.as_view(), {'starred':False}, name='admin_import_any_repo'),
     url(r'^repos/starred/$', views.StarredRepoView.as_view(), name='admin_starred_repo'),

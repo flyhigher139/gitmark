@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from main import views as main_view
+from main import views as main_view, init
 
 urlpatterns = [
     url(r'^$', main_view.AdminIndexView.as_view()),
@@ -24,6 +24,11 @@ urlpatterns = [
     url(r'^main/', include('main.urls', namespace='main')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^api/', include('api.urls', namespace='api')),
+]
+
+# GitMark Init
+urlpatterns += [
+    url(r'^init/$', init.GitMarkInitView.as_view(), name='init'),
 ]
 
 urlpatterns += [

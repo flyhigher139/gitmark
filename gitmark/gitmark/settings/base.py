@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'bootstrap3',
     'guardian',
+    'import_export',
     'main',
     'accounts',
     'api',

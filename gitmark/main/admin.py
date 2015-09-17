@@ -1,8 +1,9 @@
 from django.contrib import admin
-from main import models
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+
+from main import models
 
 
 class RepoResource(resources.ModelResource):
@@ -34,7 +35,6 @@ class GitMarkMetaResource(resources.ModelResource):
 
 class RepoAdmin(ImportExportModelAdmin):
     resource_class = RepoResource
-    # pass
 
 class LanguageAdmin(ImportExportModelAdmin):
     resource_class = LanguageResource
@@ -48,7 +48,7 @@ class CollectionAdmin(ImportExportModelAdmin):
 class GitMarkMetaAdmin(ImportExportModelAdmin):
     resource_class = GitMarkMetaResource
 
-# Register your models here.
+
 admin.site.register(models.Repo, RepoAdmin)
 admin.site.register(models.Language, LanguageAdmin)
 admin.site.register(models.Tag, TagAdmin)

@@ -5,3 +5,7 @@
 .no-border-group-list{
     border: 0px;
 }
+
+.btn a{
+	color: white;
+}

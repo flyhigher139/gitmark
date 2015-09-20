@@ -2,6 +2,13 @@
 
 {% block main %}
 {% load bootstrap3 %}
+
+<ol class="breadcrumb">
+  <li><a href="{% url 'main:my_collections' %}">Collections</a></li>
+  <li><a href="{% url 'main:my_collection' collection.id %}">{{ collection.name }}</a></li>
+  <li class="active">edit</li>
+</ol>
+
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="{% url 'main:my_collection_edit_starred' collection.id %}">Starred Repos</a></li>
   <li role="presentation"><a href="{% url 'main:my_collection_edit_all' collection.id %}">All Repos</a></li>

@@ -61,6 +61,9 @@ def github_callback(request):
     if request.session['oauth_callback_type'] == 'register':
         return github_register_behavior(request)
 
+    if request.session['oauth_callback_type'] == 'login':
+        return github_login_behavior(request)
+
     if request.session['oauth_callback_type'] == 'link_github':
         return github_link_account_behavior(request)
 
@@ -107,12 +110,32 @@ def github_register_behavior(request):
     account.github = github_url
     account.save()
 
-    user = authenticate(username=user.username, password='password')
+    user = authenticate(token=request.session['oauth_user_token'])
     login(request, user)
 
     # url = reverse('accounts:login')
     url = reverse('main:admin_index')
     return redirect(url)
+
+def github_login_behavior(request):
+    user = authenticate(token=request.session['oauth_user_token'])
+
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            url = request.GET.get('next', None)
+            if not url:
+                url = reverse('main:admin_index')
+            return redirect(url)
+        else:
+            msg = 'The user is disabled'
+            messages.add_message(request, messages.WARNING, msg)
+            return self.get(request, form)
+    else:
+        msg = 'Invalid login, user does not exist'
+        messages.add_message(request, messages.ERROR, msg)
+        url = reverse('accounts:register')
+        return redirect(url)
 
 def github_link_account_behavior(request):
     url = github_apis.auth_user()
@@ -136,3 +159,4 @@ def github_link_account_behavior(request):
     
     url = reverse('main:admin_index')
     return redirect(url)
+

@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import User
+from django.conf import settings
 
 import requests
 from requests_oauthlib import OAuth2Session, OAuth2
 
 from gitmark import github_apis
+
+client_id = settings.GITMARK['GITHUB']['client_id']
 
 class GitHubBackend(object):
     def authenticate(self, token=None):
@@ -27,6 +30,8 @@ class GitHubBackend(object):
             return user
         except User.DoesNotExist:
             return None
+
+
 
     def get_user(self, user_id):
         try:

@@ -48,10 +48,6 @@ INSTALLED_APPS = (
     'api',
 )
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'accounts.auth.github.GitHubBackend',
-)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -130,8 +126,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static2/")
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # this is default
+    'accounts.auth.github.GitHubBackend',
     'guardian.backends.ObjectPermissionBackend',
 )
+
 
 ANONYMOUS_USER_ID = -1
 

@@ -22,7 +22,7 @@ from requests_oauthlib import OAuth2Session, OAuth2
 from . import forms, models, github_auth
 
 class LoginView(View):
-    template_name = 'accounts/simple_form.html'
+    template_name = 'accounts/login.html'
     def get(self, request, form=None):
         data = {}
         if not form:
@@ -32,6 +32,11 @@ class LoginView(View):
         data['btn_name'] = 'Login'
         return render(request, self.template_name, data)
     def post(self, request, form=None):
+        if request.POST.get('login_github'):
+            request.session['oauth_callback_type'] = 'login'
+            # return HttpResponse('waiting to code')
+            return github_auth.github_auth(request)
+
         data = {}
         form = forms.LoginForm(request.POST)
         if form.is_valid():

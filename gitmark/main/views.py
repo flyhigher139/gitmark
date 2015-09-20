@@ -183,6 +183,47 @@ class MyCollectionDetailView(View):
 
         return render(request, self.template_name, data)
 
+class CollectionModify(View):
+    template_name = 'myadmin/simple_form.html'
+    def get(self, request, pk, form=None):
+        pk = int(pk)
+        data = common_data()
+
+        try:
+            collection = models.Collection.objects.get(pk=pk)
+        except models.Collection.ObjectNotExist:
+            raise Http404
+
+        if not form:
+            form = forms.CollectionForm(initial={ 'name':collection.name, 'description':collection.description })
+
+        data['form'] = form
+        data['heading'] = 'Collection Modification'
+
+        return render(request, self.template_name, data)
+
+    def post(self, request, pk):
+        form = forms.CollectionForm(request.POST)
+        if form.is_valid():
+            try:
+                collection = models.Collection.objects.get(pk=pk)
+            except models.Collection.ObjectNotExist:
+                raise Http404
+
+            collection.name = form.cleaned_data['name']
+            collection.description = form.cleaned_data['description']
+
+            collection.save()
+
+            url = reverse('main:my_collections')
+            msg = 'Succeed to update the collection'
+            messages.add_message(request, messages.SUCCESS, msg)
+
+            return redirect(url)
+
+        else:
+            return self.get(request, pk, form)
+
 class MyCollectionEditView(View):
     template_name = 'myadmin/collection_edit.html'
     def get(self, request, pk, from_starred=None):

@@ -50,7 +50,7 @@
             <td>{{ collection.create_date }}</td>
             <td>{{ collection.last_update }}</td>
             <td>
-                <a href="#"><i class="fa fa-pencil-square-o"></i></a>
+                <a href="{% url 'main:collection_modification' collection.id %}"><i class="fa fa-pencil-square-o"></i></a>
                 <a href="#"><i class="fa fa-trash"></i></a>
             </td>
         </tr>

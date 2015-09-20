@@ -24,6 +24,7 @@ urlpatterns += [
     url(r'^repos/starred/$', views.StarredRepoView.as_view(), name='admin_starred_repo'),
     url(r'^collections/$', views.MyCollectionView.as_view(), name='my_collections'),
     url(r'^collections/(?P<pk>[0-9]+)/$', views.MyCollectionDetailView.as_view(), name='my_collection'),
+    url(r'^collections/(?P<pk>[0-9]+)/modification/$', views.CollectionModify.as_view(), name='collection_modification'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/$', views.MyCollectionEditView.as_view(), {'from_starred':True}, name='my_collection_edit_starred'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/all/$', views.MyCollectionEditView.as_view(), {'from_starred':False}, name='my_collection_edit_all'),
     url(r'^collections/(?P<pk>[0-9]+)/edit/search/$', views.SearchRepos4Collection.as_view(), name='my_collection_edit_search'),

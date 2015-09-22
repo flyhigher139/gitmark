@@ -2,6 +2,7 @@
 {% block main %}
 <div class="row">
     <div class="col-md-3 col-md-offset-1">
+        <h3>User Account</h3><hr>
         <h4>Username</h4>
         {{ request.user.username }}
         <hr>
@@ -11,7 +12,7 @@
         {% csrf_token %}
             <p>
             {% if request.user.account.github_username %}
-                <i class="fa fa-github"> </i> <a href="#">{{ request.user.account.github_username }}</a> | 
+                <i class="fa fa-github fa-lg"> </i> <a href="#">{{ request.user.account.github_username }}</a> | 
                 <button type="submit" class="btn btn-link" name="rm_github" value='true'>  <i class="fa fa-trash-o"></i></button>
             {% else %}
                 <button type="submit" class="btn btn-success" name="link_github" value='true'> Link to <i class="fa fa-github"></i></button>
@@ -21,32 +22,76 @@
         <hr>
 
         <h4>Social Network</h4>
+            {% if request.user.account.github %}
+                <a href='{{ request.user.account.github }}'><i class="fa fa-github fa-lg"></i></a> |
+            {% endif %}
+
+            {% if request.user.account.twitter %}
+                <a href='{{ request.user.account.twitter }}'><i class="fa fa-twitter fa-lg"></i></a> |
+            {% endif %}
+
+            {% if request.user.account.weibo %}
+                <a href='{{ request.user.account.weibo }}'><i class="fa fa-weibo fa-lg"></i></a>
+            {% endif %}
         <hr>
 
         <h4>Homepage</h4>
+            {% if request.user.account.homepage %}
+            <a href="{{ request.user.account.homepage }}"><i class="fa fa-home fa-lg"></i></a> {{ request.user.account.homepage }}
+            {% endif %}
         <hr>
 
-        <div class="row">
-            <div class='col-md-4'>
-                111
-                starred
+        <div class="row" style="text-align:center">
+            <div class='col-md-3'>
+                <p class="lead">2048</p>
+                <small>following</small>
             </div>
-            <div class='col-md-4'>
-                111
-                starred
+            <div class='col-md-3'>
+                <p class="lead">2048</p>
+                <small>follower</small>
             </div>
-            <div class='col-md-4'>
-                111
-                starred
+            <div class='col-md-3'>
+                <a href="{% url 'main:admin_starred_repo' %}"><p class="lead">{{ starred_count }}</p></a>
+                <small>starred</small>
+            </div>
+            <div class='col-md-3'>
+                <a href="{% url 'main:my_collections' %}"><p class="lead">{{ collection_count }}</p></a>
+                <small>collection</small>
             </div>
         </div>
         
     </div>
     <div class="col-md-4">
-        <h3>Recently Starred Repos</h3>
+        <h3>Recently Starred Repos</h3><hr>
+        {% for starred_repo in starred_repos %}
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="lead"><a href="{{ starred_repo.link }}">{{ starred_repo.full_name}}</a></p>
+                    <p>{{ starred_repo.desc}}</p>
+                    <!-- <p class="grey-text"><small>Language: {{starred_repo.language.name}}</small> </p> -->
+                    <p><span class="label label-default"><small>{{ starred_repo.language.name }}</small></span></p>
+                </div>
+            </div>
+        {% if not forloop.last%}<hr>{% endif %}
+
+        {% endfor %}
+
+        {% if starred_count > 5%}<a href="#">See All</a>{% endif %}
     </div>
     <div class="col-md-4">
-        <h3>Collections</h3>
+        <h3>Collections</h3><hr>
+        {% for collection in collections %}
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="lead"><a href="#">{{ collection.name}}</a></p>
+                    <p>{{ collection.description}}</p>
+                </div>
+            </div>
+        {% if not forloop.last%}<hr>{% endif %}
+
+        {% endfor %}
+
+        {% if collection_count > 5%}<a href="#">See All</a>{% endif %}
     </div>
 </div>
 {% endblock %}

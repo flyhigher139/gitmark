@@ -31,7 +31,19 @@ class AdminIndexView(View):
     template_name = 'myadmin/index.html'
     def get(self, request):
         data = common_data()
-        # tasks.test_celery.delay()
+
+        starred_count = models.Repo.objects.filter(starred_users=request.user).count()
+        data['starred_count'] = starred_count
+
+        collection_count = models.Collection.objects.filter(user=request.user).count()
+        data['collection_count'] = collection_count
+
+        starred_repos = models.Repo.objects.filter(starred_users=request.user).order_by('-create_date')[:5]
+        data['starred_repos'] = starred_repos
+
+        collections = models.Collection.objects.filter(user=request.user).order_by('-create_date')[:10]
+        data['collections'] = collections
+
         return render(request, self.template_name, data)
 
     def post(self, request):
@@ -52,6 +64,7 @@ class HomeView(View):
     template_name = 'main/home.html'
     def get(self, request):
         data = common_data()
+
         return render(request, self.template_name, data)
 
 class ImportRepoView(View):

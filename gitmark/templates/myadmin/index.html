@@ -1,20 +1,52 @@
 {% extends 'admin_base.html' %}
 {% block main %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <h3>GitHub Account</h3>
+    <div class="col-md-3 col-md-offset-1">
+        <h4>Username</h4>
+        {{ request.user.username }}
+        <hr>
+
+        <h4>GitHub Account</h4>
         <form method="POST">
         {% csrf_token %}
             <p>
             {% if request.user.account.github_username %}
                 <i class="fa fa-github"> </i> <a href="#">{{ request.user.account.github_username }}</a> | 
-                <button type="submit" class="btn btn-default" name="rm_github" value='true'>  <i class="fa fa-trash-o"></i></button>
+                <button type="submit" class="btn btn-link" name="rm_github" value='true'>  <i class="fa fa-trash-o"></i></button>
             {% else %}
                 <button type="submit" class="btn btn-success" name="link_github" value='true'> Link to <i class="fa fa-github"></i></button>
             {% endif %}
             </p>
         </form>
+        <hr>
+
+        <h4>Social Network</h4>
+        <hr>
+
+        <h4>Homepage</h4>
+        <hr>
+
+        <div class="row">
+            <div class='col-md-4'>
+                111
+                starred
+            </div>
+            <div class='col-md-4'>
+                111
+                starred
+            </div>
+            <div class='col-md-4'>
+                111
+                starred
+            </div>
+        </div>
         
+    </div>
+    <div class="col-md-4">
+        <h3>Recently Starred Repos</h3>
+    </div>
+    <div class="col-md-4">
+        <h3>Collections</h3>
     </div>
 </div>
 {% endblock %}

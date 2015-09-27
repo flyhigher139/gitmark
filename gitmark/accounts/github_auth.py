@@ -84,6 +84,7 @@ def github_register_behavior(request):
     username = github_user.get('login')
     email = github_user.get('email')
     github_url = github_user.get('html_url')
+    avatar_url = github_user.get('avatar_url')
 
     users = models.Account.objects.filter(github_username=username)
     if len(users) > 0:
@@ -108,6 +109,7 @@ def github_register_behavior(request):
     account = user.account
     account.github_username = username
     account.github = github_url
+    account.avatar = avatar_url
     account.save()
 
     user = authenticate(token=request.session['oauth_user_token'])
@@ -151,10 +153,12 @@ def github_link_account_behavior(request):
     username = github_user.get('login')
     email = github_user.get('email')
     github_url = github_user.get('html_url')
+    avatar_url = github_user.get('avatar_url')
 
     account = request.user.account
     account.github_username = username
     account.github = github_url
+    account.avatar = avatar_url
     account.save()
     
     url = reverse('main:admin_index')

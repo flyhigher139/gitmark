@@ -18,8 +18,8 @@ class Account(models.Model):
     twitter = models.URLField(null=True, blank=True)
     github = models.URLField(null=True, blank=True)
     user = models.OneToOneField(User)
+    avatar = models.URLField(null=True, blank=True)
     github_username = models.CharField(null=True, blank=True, max_length=128)
-    # github_token = models.TextField(null=True, blank=True)
 
 
     @receiver(post_save, sender=User)

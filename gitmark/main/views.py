@@ -32,16 +32,16 @@ class AdminIndexView(View):
     def get(self, request):
         data = common_data()
 
-        starred_count = models.Repo.objects.filter(starred_users=request.user).count()
+        starred_count = models.Repo.objects.filter(starred_users=request.user.id).count()
         data['starred_count'] = starred_count
 
-        collection_count = models.Collection.objects.filter(user=request.user).count()
+        collection_count = models.Collection.objects.filter(user=request.user.id).count()
         data['collection_count'] = collection_count
 
-        starred_repos = models.Repo.objects.filter(starred_users=request.user).order_by('-create_date')[:5]
+        starred_repos = models.Repo.objects.filter(starred_users=request.user.id).order_by('-create_date')[:5]
         data['starred_repos'] = starred_repos
 
-        collections = models.Collection.objects.filter(user=request.user).order_by('-create_date')[:10]
+        collections = models.Collection.objects.filter(user=request.user.id).order_by('-create_date')[:10]
         data['collections'] = collections
 
         return render(request, self.template_name, data)
@@ -108,7 +108,7 @@ class StarredRepoView(View):
         except ValueError:
             raise Http404
         data['language_id'] = language_id
-        starred_repos = models.Repo.objects.filter(starred_users=request.user)
+        starred_repos = models.Repo.objects.filter(starred_users=request.user.id)
         languages = starred_repos.values('language').annotate(num_repo=Count('language'))
         for language in languages:
             language['name'] = models.Language.objects.get(pk=language['language']).name
@@ -143,7 +143,7 @@ class MyCollectionView(View):
             form = forms.CollectionForm()
         data['form'] = form
         
-        collections = models.Collection.objects.filter(user=request.user)
+        collections = models.Collection.objects.filter(user=request.user.id)
         data['collections'] = collections
 
         return render(request, self.template_name, data)
@@ -153,7 +153,7 @@ class MyCollectionView(View):
         if form.is_valid():
             name = form.cleaned_data['name']
             desc = form.cleaned_data['description']
-            collection = models.Collection(name=name, description=desc, user=request.user)
+            collection = models.Collection(name=name, description=desc, user=request.user.id)
             collection.save()
 
             msg = 'Succeed to create new collection'
@@ -171,7 +171,7 @@ class MyCollectionDetailView(View):
     def get(self, request, pk):
         pk = int(pk)
         data = common_data()
-        collections = models.Collection.objects.filter(user=request.user)
+        collections = models.Collection.objects.filter(user=request.user.id)
         data['collections'] = collections
         try:
             cur_collection = models.Collection.objects.get(pk=pk)
@@ -274,7 +274,7 @@ class MyCollectionEditView(View):
             repos = repos.filter(language__id=language_id)
 
         if from_starred:
-            repos = repos.filter(starred_users=request.user)
+            repos = repos.filter(starred_users=request.user.id)
             data['all'] = False
             data['starred'] = True
 

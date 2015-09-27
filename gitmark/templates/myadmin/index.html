@@ -3,6 +3,7 @@
 <div class="row">
     <div class="col-md-3 col-md-offset-1">
         <h3>User Account</h3><hr>
+        <img src="{{ request.user.account.avatar }}" width="80%" class="img-rounded">
         <h4>Username</h4>
         {{ request.user.username }}
         <hr>
@@ -12,7 +13,7 @@
         {% csrf_token %}
             <p>
             {% if request.user.account.github_username %}
-                <i class="fa fa-github fa-lg"> </i> <a href="#">{{ request.user.account.github_username }}</a> | 
+                <i class="fa fa-github fa-lg"> </i> <a href="#">{{ request.user.account.github_username }}</a> &nbsp;| 
                 <button type="submit" class="btn btn-link" name="rm_github" value='true'>  <i class="fa fa-trash-o"></i></button>
             {% else %}
                 <button type="submit" class="btn btn-success" name="link_github" value='true'> Link to <i class="fa fa-github"></i></button>
@@ -23,11 +24,11 @@
 
         <h4>Social Network</h4>
             {% if request.user.account.github %}
-                <a href='{{ request.user.account.github }}'><i class="fa fa-github fa-lg"></i></a> |
+                <a href='{{ request.user.account.github }}'><i class="fa fa-github fa-lg"></i></a> &nbsp;
             {% endif %}
 
             {% if request.user.account.twitter %}
-                <a href='{{ request.user.account.twitter }}'><i class="fa fa-twitter fa-lg"></i></a> |
+                <a href='{{ request.user.account.twitter }}'><i class="fa fa-twitter fa-lg"></i></a> &nbsp;
             {% endif %}
 
             {% if request.user.account.weibo %}
@@ -78,7 +79,7 @@
 
         {% if starred_count > 5%}<a href="#">See All</a>{% endif %}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h3>Collections</h3><hr>
         {% for collection in collections %}
             <div class="row">

@@ -28,7 +28,7 @@ def import_github_starred_repos(github_username, gitmark_username):
     # print app_user, app_pass, res.status_code
     # res = requests.get(api)
     starred_repos = res.json()
-    print page
+    # print page
 
     # GitHub API rate limit exceeded 
     if not isinstance(starred_repos, list):
@@ -43,10 +43,10 @@ def import_github_starred_repos(github_username, gitmark_username):
         res = requests.get(api, auth=(app_user, app_pass))
         # res = requests.get(api)
         if res.status_code != 200:
-            print 'GitHub API rate limit exceeded '
+            # print 'GitHub API rate limit exceeded '
             return
         starred_repos = res.json()
-        print page
+        # print page
     # print cur_user.id
 
 @celery_app.task(name='gitmark.import_repos')
@@ -60,12 +60,12 @@ def import_github_repos(github_username, gitmark_username=None):
 
     # GitHub API rate limit exceeded 
     if res.status_code != 200:
-        print 'GitHub API rate limit exceeded'
+        # print 'GitHub API rate limit exceeded'
         return
 
 
     starred_repos = res.json()
-    print 'Page: {0}, repo count: {1}'.format(params['page'], len(starred_repos))
+    # print 'Page: {0}, repo count: {1}'.format(params['page'], len(starred_repos))
 
     while len(starred_repos) > 0:
         functions.import_repos(starred_repos, gitmark_user=cur_user)
@@ -74,10 +74,10 @@ def import_github_repos(github_username, gitmark_username=None):
         res = requests.get(api, auth=(app_user, app_pass), params=params)
 
         if res.status_code != 200:
-            print 'GitHub API rate limit exceeded '
+            # print 'GitHub API rate limit exceeded '
             return
 
         starred_repos = res.json()
-        print 'Page: {0}, repo count: {1}'.format(params['page'], len(starred_repos))
+        # print 'Page: {0}, repo count: {1}'.format(params['page'], len(starred_repos))
 
 

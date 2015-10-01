@@ -5,7 +5,9 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Q
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.decorators import method_decorator
 
 
 import requests
@@ -29,6 +31,7 @@ class EnterpriseView(View):
 
 class AdminIndexView(View):
     template_name = 'myadmin/index.html'
+    @method_decorator(login_required)
     def get(self, request):
         data = common_data()
 
@@ -46,6 +49,7 @@ class AdminIndexView(View):
 
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request):
         if request.POST.get('link_github'):
             request.session['oauth_callback_type'] = 'link_github'           
@@ -69,11 +73,13 @@ class HomeView(View):
 
 class ImportRepoView(View):
     template_name = 'myadmin/import_repo.html'
+    @method_decorator(login_required)
     def get(self, request, starred=True):
         data = common_data()
         data['starred'] = starred
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request, starred=True):
         if request.POST.get('import_mine'):
             github_user = request.user.account.github_username
@@ -100,6 +106,8 @@ class ImportRepoView(View):
 
 class StarredRepoView(View):
     template_name = 'myadmin/starred_repo.html'
+
+    @method_decorator(login_required)
     def get(self, request):
         data = common_data()
         language_id = request.GET.get('language', 0)
@@ -136,6 +144,8 @@ class StarredRepoView(View):
 
 class MyCollectionView(View):
     template_name = 'myadmin/collections.html'
+
+    @method_decorator(login_required)
     def get(self, request, form=None):
         data = common_data()
 
@@ -148,6 +158,7 @@ class MyCollectionView(View):
 
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request):
         form = forms.CollectionForm(request.POST)
         if form.is_valid():
@@ -168,6 +179,8 @@ class MyCollectionView(View):
 
 class MyCollectionDetailView(View):
     template_name = 'myadmin/collection.html'
+
+    @method_decorator(login_required)
     def get(self, request, pk):
         pk = int(pk)
         data = common_data()
@@ -198,6 +211,8 @@ class MyCollectionDetailView(View):
 
 class CollectionModify(View):
     template_name = 'myadmin/simple_form.html'
+
+    @method_decorator(login_required)
     def get(self, request, pk, form=None):
         pk = int(pk)
         data = common_data()
@@ -215,6 +230,7 @@ class CollectionModify(View):
 
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request, pk):
         form = forms.CollectionForm(request.POST)
         if form.is_valid():
@@ -239,6 +255,8 @@ class CollectionModify(View):
 
 class MyCollectionEditView(View):
     template_name = 'myadmin/collection_edit.html'
+
+    @method_decorator(login_required)
     def get(self, request, pk, from_starred=None):
         data = common_data()
         data['all'] = True
@@ -290,6 +308,7 @@ class MyCollectionEditView(View):
         data['repos'] = repos
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request, pk, from_starred=None):
         data = {}
         pk = int(pk)
@@ -314,6 +333,8 @@ class MyCollectionEditView(View):
 
 class SearchRepos4Collection(View):
     template_name = 'myadmin/collection_search_repo.html'
+
+    @method_decorator(login_required)
     def get(self, request, pk):
         data = common_data()
         data['all'] = True
@@ -362,6 +383,7 @@ class SearchRepos4Collection(View):
 
         return render(request, self.template_name, data)
 
+    @method_decorator(login_required)
     def post(self, request, pk):
         view = MyCollectionEditView()
         return view.post(request, pk)

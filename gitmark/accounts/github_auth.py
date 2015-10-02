@@ -15,6 +15,7 @@ import requests
 from requests_oauthlib import OAuth2Session, OAuth2
 
 from gitmark import github_apis
+from utils.ext import qiniu_fetch_img
 from . import models
 
 client_id = settings.GITMARK['GITHUB']['client_id']
@@ -84,7 +85,7 @@ def github_register_behavior(request):
     username = github_user.get('login')
     email = github_user.get('email')
     github_url = github_user.get('html_url')
-    avatar_url = github_user.get('avatar_url')
+    github_avatar_url = github_user.get('avatar_url')
 
     users = models.Account.objects.filter(github_username=username)
     if len(users) > 0:
@@ -104,6 +105,9 @@ def github_register_behavior(request):
             from random import random, randint
             username = username + str(randint(1, 1000))
             return create_user(username, email, password)
+
+    avatar_name = 'github_avatar_{0}.jpeg'.format('username')
+    avatar_url = qiniu_fetch_img(github_avatar_url, avatar_name)
 
     user = create_user(username, email, 'password')
     account = user.account
@@ -153,7 +157,10 @@ def github_link_account_behavior(request):
     username = github_user.get('login')
     email = github_user.get('email')
     github_url = github_user.get('html_url')
-    avatar_url = github_user.get('avatar_url')
+    github_avatar_url = github_user.get('avatar_url')
+
+    avatar_name = 'github_avatar_{0}.jpeg'.format('username')
+    avatar_url = qiniu_fetch_img(github_avatar_url, avatar_name)
 
     account = request.user.account
     account.github_username = username

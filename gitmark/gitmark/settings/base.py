@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-from env import github, email
+from env import github, email, qiniu
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -167,10 +167,6 @@ CELERY_IGNORE_RESULT = False
 GITMARK = {
     'PER_PAGE': 5,
     'PER_PAGE_ADMIN': 10,
-    # 'COMMENT_TYPE': 'duoshuo',
-    # 'COMMENT_OPT':{
-    #     'duoshuo':'mayblog',
-    # },
     'GITHUB': {
         'client_id': os.environ.get('GITHUB_ID') or github['client_id'],
         'client_secret': os.environ.get('GITHUB_SECRET') or github['client_secret'],
@@ -179,6 +175,12 @@ GITMARK = {
         'page_limit_large': 100,
         'page_limit_medium': 50,
         'page_limit_small': 30,
+    },
+    'QINIU':{
+        'access_key': os.environ.get('QINIU_AK') or qiniu['access_key'],
+        'secret_key': os.environ.get('QINIU_SK') or qiniu['secret_key'],
+        'bucket_name': os.environ.get('BUCKET') or qiniu['bucket_name'],
+        'base_url': os.environ.get('QINIU_URL') or qiniu['base_url'],
     }
 }
 

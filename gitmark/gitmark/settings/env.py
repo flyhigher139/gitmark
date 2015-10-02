@@ -12,3 +12,10 @@ email = {
 	'username': 'gmail',
 	'password': 'password',
 }
+
+qiniu = {
+	'access_key': 'pJJ-Ry9tWvmlaGUhNNBcJopEziAyl_w6kjnYdolU',
+	'secret_key': 'AZYqrg4_sBHzUb8hkChNgynU350QYXeJ1W8lFvJs',
+	'bucket_name': 'development',
+	'base_url': 'http://7xn70j.com1.z0.glb.clouddn.com/',
+}

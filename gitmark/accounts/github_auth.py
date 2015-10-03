@@ -106,7 +106,7 @@ def github_register_behavior(request):
             username = username + str(randint(1, 1000))
             return create_user(username, email, password)
 
-    avatar_name = 'github_avatar_{0}.jpeg'.format('username')
+    avatar_name = 'github_avatar_{0}.jpeg'.format(username)
     avatar_url = qiniu_fetch_img(github_avatar_url, avatar_name)
 
     user = create_user(username, email, 'password')
@@ -159,7 +159,7 @@ def github_link_account_behavior(request):
     github_url = github_user.get('html_url')
     github_avatar_url = github_user.get('avatar_url')
 
-    avatar_name = 'github_avatar_{0}.jpeg'.format('username')
+    avatar_name = 'github_avatar_{0}.jpeg'.format(username)
     avatar_url = qiniu_fetch_img(github_avatar_url, avatar_name)
 
     account = request.user.account

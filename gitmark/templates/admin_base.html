@@ -182,6 +182,28 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="http://cdn.staticfile.org/bootbox.js/4.3.0/bootbox.min.js"></script>
+
+    {% if request.user.is_authenticated %}
+        <script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//widget.daovoice.io/widget/f9b57d5e.js","daovoice");</script>
+        <script>
+          daovoice('init', {
+            app_id: "f9b57d5e",
+            user_id: "{{ request.user.id }}", // 必填: 该用户在您系统上的唯一ID
+            email: "{{ request.user.email }}", // 选填:  该用户在您系统上的主邮箱
+            name: "{{ request.user.username }}", // 选填: 用户名
+            signed_up: {{ request.user.date_joined|date:"U" }} // 选填: 用户的注册时间，用Unix时间戳表示
+          });
+          daovoice('update');
+        </script>
+    {% else %}
+        <script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//widget.daovoice.io/widget/f9b57d5e.js","daovoice");</script>
+        <script>
+          daovoice('init', {
+            app_id: "f9b57d5e",
+          });
+          daovoice('update');
+        </script>
+    {% endif %}
     
 
     <!-- Custom Theme JavaScript -->
